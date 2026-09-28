@@ -1,0 +1,9 @@
+{% if total_pages and total_pages > 1 %}
+<div class="sp-head" style="margin-top: 12px;">
+	<span class="sp-muted">{{ _("Page {0} of {1} ({2} records)").format(page, total_pages, total_records) }}</span>
+	<div>
+		{% if page > 1 %}<a class="btn btn-default btn-sm" href="{{ list_path }}?page={{ page - 1 }}{% if q %}&q={{ q | urlencode }}{% endif %}">{{ _("Previous") }}</a>{% endif %}
+		{% if page < total_pages %}<a class="btn btn-default btn-sm" href="{{ list_path }}?page={{ page + 1 }}{% if q %}&q={{ q | urlencode }}{% endif %}">{{ _("Next") }}</a>{% endif %}
+	</div>
+</div>
+{% endif %}

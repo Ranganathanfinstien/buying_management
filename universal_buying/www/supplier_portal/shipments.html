@@ -1,0 +1,36 @@
+{% extends "templates/web.html" %}
+{% block title %}{{ _("Shipments") }}{% endblock %}
+{% block page_content %}
+{% include "templates/includes/supplier_portal_styles.html" %}
+<div class="sp-shell">
+	{% include "templates/includes/supplier_portal_nav.html" %}
+	<main class="sp-main">
+		{% if not_linked %}{% include "templates/includes/supplier_portal_not_linked.html" %}{% else %}
+		<div class="sp-head"><h2>{{ _("Shipments") }}</h2>{% include "templates/includes/supplier_portal_search.html" %}</div>
+		<p class="sp-muted">{{ _("Create a shipment from the Purchase Order page.") }}</p>
+		<div class="sp-card sp-table-wrap">
+			<table class="sp-table">
+				<thead><tr><th>{{ _("Shipment") }}</th><th>{{ _("Purchase Order") }}</th><th>{{ _("Date") }}</th><th>{{ _("ETA") }}</th><th>{{ _("Transport") }}</th><th>{{ _("LR / AWB") }}</th><th class="num">{{ _("Qty") }}</th><th>{{ _("Shipment") }}</th><th>{{ _("Delivery") }}</th></tr></thead>
+				<tbody>
+				{% for s in shipments %}
+				<tr>
+					<td>{{ s.name }}</td>
+					<td><a href="/supplier_portal/purchase_orders?name={{ s.purchase_order | urlencode }}">{{ s.purchase_order }}</a></td>
+					<td>{{ s.date_fmt }}</td><td>{{ s.eta_fmt or "-" }}</td>
+					<td>{{ _(s.mode_of_transport or "") }} {{ s.transporter or "" }}</td>
+					<td>{% if s.tracking_url %}<a href="{{ s.tracking_url }}" target="_blank" rel="noopener">{{ s.lr_awb_no or _("Track") }}</a>{% else %}{{ s.lr_awb_no or "" }}{% endif %}</td>
+					<td class="num">{{ s.total_shipped_qty }}</td>
+					<td>{{ _(s.shipment_status or "") }}</td>
+					<td><span class="sp-pill {{ 'green' if s.delivery_status == 'Delivered' else 'blue' }}">{{ _(s.delivery_status or "") }}</span></td>
+				</tr>
+				{% else %}
+				<tr><td colspan="9" class="sp-muted">{{ _("No shipments yet.") }}</td></tr>
+				{% endfor %}
+				</tbody>
+			</table>
+			{% include "templates/includes/supplier_portal_pagination.html" %}
+		</div>
+		{% endif %}
+	</main>
+</div>
+{% endblock %}

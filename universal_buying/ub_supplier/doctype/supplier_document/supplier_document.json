@@ -1,0 +1,104 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-09-26 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "document_type",
+  "custom_label",
+  "category",
+  "doc_key",
+  "column_break_d1",
+  "status",
+  "attachment",
+  "uploaded_on",
+  "expires_on",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "document_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Document Type",
+   "options": "Supplier Document Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "custom_label",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Custom Label / Title"
+  },
+  {
+   "fetch_from": "document_type.category",
+   "fieldname": "category",
+   "fieldtype": "Data",
+   "label": "Category",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "document_type.document_key",
+   "fieldname": "doc_key",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Key",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_d1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Not Uploaded",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Not Uploaded\nUploaded\nExpiring\nExpired",
+   "read_only": 1
+  },
+  {
+   "fieldname": "attachment",
+   "fieldtype": "Attach",
+   "in_list_view": 1,
+   "label": "Attachment"
+  },
+  {
+   "fieldname": "uploaded_on",
+   "fieldtype": "Datetime",
+   "label": "Uploaded On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "expires_on",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Expires On"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "is_submittable": 0,
+ "issingle": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-26 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "UB Supplier",
+ "name": "Supplier Document",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 0,
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}

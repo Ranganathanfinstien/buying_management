@@ -1,0 +1,110 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-09-26 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "category",
+  "question_no",
+  "main_question",
+  "question",
+  "weightage",
+  "ranking_section",
+  "option_5",
+  "option_4",
+  "option_3",
+  "column_break_opts",
+  "option_2",
+  "option_1"
+ ],
+ "fields": [
+  {
+   "default": "Risk",
+   "fieldname": "category",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Category",
+   "options": "Risk\nEvaluation\nRanking",
+   "reqd": 1
+  },
+  {
+   "description": "Groups questions, e.g. SR_1, SE_2, RANK",
+   "fieldname": "question_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Section Code"
+  },
+  {
+   "fieldname": "main_question",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Section Heading"
+  },
+  {
+   "fieldname": "question",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Question",
+   "reqd": 1
+  },
+  {
+   "fieldname": "weightage",
+   "fieldtype": "Int",
+   "label": "Weightage"
+  },
+  {
+   "depends_on": "eval:doc.category=='Ranking'",
+   "fieldname": "ranking_section",
+   "fieldtype": "Section Break",
+   "label": "Ranking Options"
+  },
+  {
+   "fieldname": "option_5",
+   "fieldtype": "Data",
+   "label": "Score 5"
+  },
+  {
+   "fieldname": "option_4",
+   "fieldtype": "Data",
+   "label": "Score 4"
+  },
+  {
+   "fieldname": "option_3",
+   "fieldtype": "Data",
+   "label": "Score 3"
+  },
+  {
+   "fieldname": "column_break_opts",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "option_2",
+   "fieldtype": "Data",
+   "label": "Score 2"
+  },
+  {
+   "fieldname": "option_1",
+   "fieldtype": "Data",
+   "label": "Score 1"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "is_submittable": 0,
+ "issingle": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-26 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "UB Supplier",
+ "name": "Supplier Onboarding Question Bank Detail",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 0,
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}

@@ -1,0 +1,881 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "naming_series:",
+ "creation": "2026-09-26 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "supplier_name",
+  "supplier_group",
+  "supplier_type",
+  "country",
+  "column_break0",
+  "status",
+  "prospective_supplier",
+  "supplier",
+  "portal_user",
+  "commercial_section",
+  "default_currency",
+  "default_price_list",
+  "incoterm",
+  "column_break_comm",
+  "payment_terms",
+  "website",
+  "moq_per_line",
+  "tax_section",
+  "gst_category",
+  "gstin",
+  "pan",
+  "tax_category",
+  "tax_withholding_category",
+  "column_break_tax",
+  "msme",
+  "msme_category",
+  "msme_registration_no",
+  "msme_certificate",
+  "msme_expiry",
+  "address_contact_tab",
+  "primary_address_section",
+  "address_type",
+  "address_line1",
+  "address_line2",
+  "column_break_addr",
+  "city",
+  "state",
+  "pincode",
+  "primary_contact_section",
+  "contact_person",
+  "designation",
+  "column_break_cont",
+  "email",
+  "phone",
+  "mobile",
+  "escalation_section",
+  "escalation_contact_person",
+  "escalation_designation",
+  "column_break_esc",
+  "escalation_email",
+  "escalation_phone",
+  "bank_tab",
+  "bank_section",
+  "bank_name",
+  "account_holder_name",
+  "bank_account_no",
+  "column_break_bank",
+  "ifsc_code",
+  "bank_branch",
+  "iban",
+  "swift_code",
+  "documents_tab",
+  "statutory_docs_section",
+  "gst_certificate",
+  "pan_card",
+  "column_break_docs",
+  "company_registration",
+  "qms_section",
+  "iso_9001",
+  "iso_14001",
+  "iso_45001",
+  "column_break_qms",
+  "iatf_16949",
+  "iso_ts_22163",
+  "as_9100",
+  "other_docs_section",
+  "attach_1",
+  "attach_2",
+  "attach_3",
+  "column_break_other",
+  "customer_base",
+  "company_specialize",
+  "business_continuity",
+  "logistics_processes",
+  "notes_section",
+  "supplier_notes",
+  "risk_analysis_tab",
+  "questionnaire_enabled",
+  "question_bank",
+  "risk_legend",
+  "risk_analysis",
+  "evaluation_tab",
+  "evaluation",
+  "evaluation_ranking_section",
+  "evaluation_ranking",
+  "evaluation_score",
+  "audit_tab",
+  "audit_required",
+  "supplier_audit_type",
+  "column_break_audit",
+  "supplier_audit_log",
+  "audit_self_assessment_section",
+  "audit_self_assessment",
+  "portal_tab",
+  "onboarding_token",
+  "token_expired",
+  "portal_submitted_on",
+  "column_break_portal",
+  "onboarding_link",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "default": "SUP-ONB-.YYYY.-.#####",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "hidden": 0,
+   "label": "Series",
+   "no_copy": 1,
+   "options": "SUP-ONB-.YYYY.-.#####",
+   "print_hide": 1,
+   "reqd": 1
+  },
+  {
+   "bold": 1,
+   "fieldname": "supplier_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Supplier Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "supplier_group",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Supplier Group",
+   "options": "Supplier Group",
+   "reqd": 1
+  },
+  {
+   "default": "Company",
+   "fieldname": "supplier_type",
+   "fieldtype": "Select",
+   "label": "Supplier Type",
+   "options": "Company\nIndividual\nPartnership",
+   "reqd": 1
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Link",
+   "label": "Country",
+   "options": "Country",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break0",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "no_copy": 1,
+   "options": "Draft\nPending Approval\nApproved\nRejected",
+   "read_only": 1
+  },
+  {
+   "fieldname": "prospective_supplier",
+   "fieldtype": "Link",
+   "label": "Prospective Supplier",
+   "options": "Prospective Supplier",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier Created",
+   "no_copy": 1,
+   "options": "Supplier",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "portal_user",
+   "fieldtype": "Link",
+   "label": "Portal User",
+   "no_copy": 1,
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "commercial_section",
+   "fieldtype": "Section Break",
+   "label": "Commercial"
+  },
+  {
+   "fieldname": "default_currency",
+   "fieldtype": "Link",
+   "label": "Billing Currency",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "default_price_list",
+   "fieldtype": "Link",
+   "label": "Price List",
+   "options": "Price List"
+  },
+  {
+   "fieldname": "incoterm",
+   "fieldtype": "Link",
+   "label": "Incoterms",
+   "options": "Incoterm"
+  },
+  {
+   "fieldname": "column_break_comm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "payment_terms",
+   "fieldtype": "Link",
+   "label": "Payment Terms Template",
+   "options": "Payment Terms Template"
+  },
+  {
+   "fieldname": "website",
+   "fieldtype": "Data",
+   "label": "Website"
+  },
+  {
+   "default": "0",
+   "fieldname": "moq_per_line",
+   "fieldtype": "Check",
+   "label": "MOQ Applies per Line"
+  },
+  {
+   "fieldname": "tax_section",
+   "fieldtype": "Section Break",
+   "label": "Tax and MSME"
+  },
+  {
+   "default": "Unregistered",
+   "fieldname": "gst_category",
+   "fieldtype": "Select",
+   "label": "GST Category",
+   "options": "\nRegistered Regular\nRegistered Composition\nUnregistered\nSEZ\nOverseas\nUIN Holders"
+  },
+  {
+   "fieldname": "gstin",
+   "fieldtype": "Data",
+   "label": "GSTIN"
+  },
+  {
+   "fieldname": "pan",
+   "fieldtype": "Data",
+   "label": "PAN",
+   "mandatory_depends_on": "eval:doc.country==\"India\""
+  },
+  {
+   "fieldname": "tax_category",
+   "fieldtype": "Link",
+   "label": "Tax Category",
+   "options": "Tax Category"
+  },
+  {
+   "fieldname": "tax_withholding_category",
+   "fieldtype": "Link",
+   "label": "Tax Withholding Category",
+   "options": "Tax Withholding Category"
+  },
+  {
+   "fieldname": "column_break_tax",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "msme",
+   "fieldtype": "Check",
+   "label": "MSME Registered"
+  },
+  {
+   "depends_on": "msme",
+   "fieldname": "msme_category",
+   "fieldtype": "Select",
+   "label": "MSME Category",
+   "options": "\nMicro\nSmall\nMedium"
+  },
+  {
+   "depends_on": "msme",
+   "fieldname": "msme_registration_no",
+   "fieldtype": "Data",
+   "label": "Udyam Registration No"
+  },
+  {
+   "depends_on": "msme",
+   "fieldname": "msme_certificate",
+   "fieldtype": "Attach",
+   "label": "MSME Certificate"
+  },
+  {
+   "depends_on": "msme",
+   "fieldname": "msme_expiry",
+   "fieldtype": "Date",
+   "label": "MSME Certificate Expiry"
+  },
+  {
+   "fieldname": "address_contact_tab",
+   "fieldtype": "Tab Break",
+   "label": "Address & Contact"
+  },
+  {
+   "fieldname": "primary_address_section",
+   "fieldtype": "Section Break",
+   "label": "Primary Address"
+  },
+  {
+   "default": "Billing",
+   "fieldname": "address_type",
+   "fieldtype": "Select",
+   "label": "Address Type",
+   "options": "Billing\nShipping\nOffice\nPlant\nWarehouse\nOther"
+  },
+  {
+   "fieldname": "address_line1",
+   "fieldtype": "Data",
+   "label": "Address Line 1"
+  },
+  {
+   "fieldname": "address_line2",
+   "fieldtype": "Data",
+   "label": "Address Line 2"
+  },
+  {
+   "fieldname": "column_break_addr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Data",
+   "label": "City/Town"
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Data",
+   "label": "State/Province"
+  },
+  {
+   "fieldname": "pincode",
+   "fieldtype": "Data",
+   "label": "Postal Code"
+  },
+  {
+   "fieldname": "primary_contact_section",
+   "fieldtype": "Section Break",
+   "label": "Primary Contact"
+  },
+  {
+   "fieldname": "contact_person",
+   "fieldtype": "Data",
+   "label": "Contact Person"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Data",
+   "label": "Designation"
+  },
+  {
+   "fieldname": "column_break_cont",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Used for the Contact and the supplier portal login.",
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email",
+   "reqd": 1
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "Phone",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "mobile",
+   "fieldtype": "Data",
+   "label": "Mobile",
+   "options": "Phone"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "escalation_section",
+   "fieldtype": "Section Break",
+   "label": "Escalation Contact"
+  },
+  {
+   "fieldname": "escalation_contact_person",
+   "fieldtype": "Data",
+   "label": "Name"
+  },
+  {
+   "fieldname": "escalation_designation",
+   "fieldtype": "Data",
+   "label": "Designation"
+  },
+  {
+   "fieldname": "column_break_esc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "escalation_email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "escalation_phone",
+   "fieldtype": "Data",
+   "label": "Phone",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "bank_tab",
+   "fieldtype": "Tab Break",
+   "label": "Bank"
+  },
+  {
+   "fieldname": "bank_section",
+   "fieldtype": "Section Break",
+   "label": "Bank Details"
+  },
+  {
+   "description": "A Bank master is created if it does not exist.",
+   "fieldname": "bank_name",
+   "fieldtype": "Data",
+   "label": "Bank Name"
+  },
+  {
+   "fieldname": "account_holder_name",
+   "fieldtype": "Data",
+   "label": "Account Holder Name"
+  },
+  {
+   "fieldname": "bank_account_no",
+   "fieldtype": "Data",
+   "label": "Account Number"
+  },
+  {
+   "fieldname": "column_break_bank",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "ifsc_code",
+   "fieldtype": "Data",
+   "label": "IFSC / Branch Code"
+  },
+  {
+   "fieldname": "bank_branch",
+   "fieldtype": "Data",
+   "label": "Bank Branch"
+  },
+  {
+   "fieldname": "iban",
+   "fieldtype": "Data",
+   "label": "IBAN"
+  },
+  {
+   "fieldname": "swift_code",
+   "fieldtype": "Data",
+   "label": "SWIFT Code"
+  },
+  {
+   "fieldname": "documents_tab",
+   "fieldtype": "Tab Break",
+   "label": "Documents"
+  },
+  {
+   "fieldname": "statutory_docs_section",
+   "fieldtype": "Section Break",
+   "label": "Statutory Documents"
+  },
+  {
+   "fieldname": "gst_certificate",
+   "fieldtype": "Attach",
+   "label": "GST Certificate"
+  },
+  {
+   "fieldname": "pan_card",
+   "fieldtype": "Attach",
+   "label": "PAN Card"
+  },
+  {
+   "fieldname": "column_break_docs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company_registration",
+   "fieldtype": "Attach",
+   "label": "Company Registration"
+  },
+  {
+   "fieldname": "qms_section",
+   "fieldtype": "Section Break",
+   "label": "QMS Certification Status"
+  },
+  {
+   "fieldname": "iso_9001",
+   "fieldtype": "Attach",
+   "label": "ISO 9001"
+  },
+  {
+   "fieldname": "iso_14001",
+   "fieldtype": "Attach",
+   "label": "ISO 14001"
+  },
+  {
+   "fieldname": "iso_45001",
+   "fieldtype": "Attach",
+   "label": "ISO 45001"
+  },
+  {
+   "fieldname": "column_break_qms",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "iatf_16949",
+   "fieldtype": "Attach",
+   "label": "IATF 16949"
+  },
+  {
+   "fieldname": "iso_ts_22163",
+   "fieldtype": "Attach",
+   "label": "ISO / TS 22163"
+  },
+  {
+   "fieldname": "as_9100",
+   "fieldtype": "Attach",
+   "label": "AS 9100"
+  },
+  {
+   "fieldname": "other_docs_section",
+   "fieldtype": "Section Break",
+   "label": "Other Documents"
+  },
+  {
+   "fieldname": "attach_1",
+   "fieldtype": "Attach",
+   "label": "Other Certificate 1"
+  },
+  {
+   "fieldname": "attach_2",
+   "fieldtype": "Attach",
+   "label": "Other Certificate 2"
+  },
+  {
+   "fieldname": "attach_3",
+   "fieldtype": "Attach",
+   "label": "Other Certificate 3"
+  },
+  {
+   "fieldname": "column_break_other",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "customer_base",
+   "fieldtype": "Attach",
+   "label": "Existing Customer Base"
+  },
+  {
+   "fieldname": "company_specialize",
+   "fieldtype": "Attach",
+   "label": "Principal Areas of Business"
+  },
+  {
+   "fieldname": "business_continuity",
+   "fieldtype": "Attach",
+   "label": "Business Continuity / Contingency Plan"
+  },
+  {
+   "fieldname": "logistics_processes",
+   "fieldtype": "Attach",
+   "label": "Logistics Processes"
+  },
+  {
+   "fieldname": "notes_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Information"
+  },
+  {
+   "fieldname": "supplier_notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  },
+  {
+   "depends_on": "eval:doc.questionnaire_enabled",
+   "fieldname": "risk_analysis_tab",
+   "fieldtype": "Tab Break",
+   "label": "Risk Analysis"
+  },
+  {
+   "default": "0",
+   "fieldname": "questionnaire_enabled",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Questionnaire Enabled",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "question_bank",
+   "fieldtype": "Link",
+   "label": "Question Bank",
+   "options": "Supplier Onboarding Question Bank"
+  },
+  {
+   "fieldname": "risk_legend",
+   "fieldtype": "HTML",
+   "label": "Risk Ranking Legend"
+  },
+  {
+   "fieldname": "risk_analysis",
+   "fieldtype": "Table",
+   "label": "Risk Analysis",
+   "options": "Supplier Risk Analysis"
+  },
+  {
+   "depends_on": "eval:doc.questionnaire_enabled",
+   "fieldname": "evaluation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Supplier Evaluation"
+  },
+  {
+   "fieldname": "evaluation",
+   "fieldtype": "Table",
+   "label": "Evaluation Questions",
+   "options": "Supplier Evaluation"
+  },
+  {
+   "fieldname": "evaluation_ranking_section",
+   "fieldtype": "Section Break",
+   "label": "Evaluation Ranking"
+  },
+  {
+   "fieldname": "evaluation_ranking",
+   "fieldtype": "Table",
+   "label": "Evaluation Ranking",
+   "options": "Supplier Evaluation Ranking"
+  },
+  {
+   "fieldname": "evaluation_score",
+   "fieldtype": "Int",
+   "label": "Ranking Score",
+   "read_only": 1
+  },
+  {
+   "fieldname": "audit_tab",
+   "fieldtype": "Tab Break",
+   "label": "Audit"
+  },
+  {
+   "default": "0",
+   "description": "Set from Buying Control Settings > Audit Required Groups.",
+   "fieldname": "audit_required",
+   "fieldtype": "Check",
+   "label": "Audit Required",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "supplier_audit_type",
+   "fieldtype": "Select",
+   "label": "Industry Type",
+   "mandatory_depends_on": "audit_required",
+   "options": "\nIndustrial\nAutomotive\nMedical\nRailways\nDefence / Aerospace"
+  },
+  {
+   "fieldname": "column_break_audit",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "supplier_audit_log",
+   "fieldtype": "Link",
+   "label": "Supplier Audit Log",
+   "no_copy": 1,
+   "options": "Supplier Audit Log",
+   "read_only": 1
+  },
+  {
+   "depends_on": "audit_required",
+   "fieldname": "audit_self_assessment_section",
+   "fieldtype": "Section Break",
+   "label": "Supplier Self Assessment"
+  },
+  {
+   "fieldname": "audit_self_assessment",
+   "fieldtype": "Table",
+   "label": "Self Assessment",
+   "options": "Supplier Audit Log Detail"
+  },
+  {
+   "fieldname": "portal_tab",
+   "fieldtype": "Tab Break",
+   "label": "Portal"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "onboarding_token",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Onboarding Token",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "token_expired",
+   "fieldtype": "Check",
+   "label": "Link Expired",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "portal_submitted_on",
+   "fieldtype": "Datetime",
+   "label": "Submitted by Supplier On",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_portal",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "onboarding_link",
+   "fieldtype": "Small Text",
+   "label": "Onboarding Link",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Supplier Onboarding",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "is_submittable": 1,
+ "issingle": 0,
+ "istable": 0,
+ "links": [],
+ "modified": "2026-09-26 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "UB Supplier",
+ "name": "Supplier Onboarding",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Purchase Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Purchase Master Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 0,
+   "cancel": 0,
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Purchase User",
+   "share": 1,
+   "submit": 0,
+   "write": 1
+  },
+  {
+   "amend": 0,
+   "cancel": 0,
+   "create": 0,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager",
+   "share": 1,
+   "submit": 0,
+   "write": 0
+  },
+  {
+   "amend": 0,
+   "cancel": 0,
+   "create": 0,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Finance Manager",
+   "share": 1,
+   "submit": 0,
+   "write": 0
+  }
+ ],
+ "quick_entry": 0,
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "search_fields": "supplier_name,supplier_group,status",
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "supplier_name",
+ "track_changes": 1
+}

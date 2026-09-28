@@ -1,0 +1,32 @@
+{% extends "templates/web.html" %}
+{% block title %}{{ _("Invoices") }}{% endblock %}
+{% block page_content %}
+{% include "templates/includes/supplier_portal_styles.html" %}
+<div class="sp-shell">
+	{% include "templates/includes/supplier_portal_nav.html" %}
+	<main class="sp-main">
+		{% if not_linked %}{% include "templates/includes/supplier_portal_not_linked.html" %}{% else %}
+		<div class="sp-head"><h2>{{ _("Invoices") }}</h2>{% include "templates/includes/supplier_portal_search.html" %}</div>
+		<p class="sp-muted">{{ _("Invoices booked by the buyer. Upload a new invoice document from the Purchase Order page.") }}</p>
+		<div class="sp-card sp-table-wrap">
+			<table class="sp-table">
+				<thead><tr><th>{{ _("Booking") }}</th><th>{{ _("Your Invoice No") }}</th><th>{{ _("Invoice Date") }}</th><th>{{ _("Due Date") }}</th><th>{{ _("Status") }}</th><th class="num">{{ _("Total") }}</th><th class="num">{{ _("Outstanding") }}</th></tr></thead>
+				<tbody>
+				{% for r in invoices %}
+				<tr>
+					<td>{{ r.name }}<div class="sp-muted">{{ r.date_fmt }}</div></td>
+					<td>{{ r.bill_no or "" }}</td><td>{{ r.bill_date_fmt }}</td><td>{{ r.due_fmt }}</td>
+					<td><span class="sp-pill {{ 'green' if r.status == 'Paid' else ('red' if r.status == 'Overdue' else '') }}">{{ _(r.status) }}</span></td>
+					<td class="num">{{ r.total_fmt }}</td><td class="num">{{ r.outstanding_fmt }}</td>
+				</tr>
+				{% else %}
+				<tr><td colspan="7" class="sp-muted">{{ _("No invoices yet.") }}</td></tr>
+				{% endfor %}
+				</tbody>
+			</table>
+			{% include "templates/includes/supplier_portal_pagination.html" %}
+		</div>
+		{% endif %}
+	</main>
+</div>
+{% endblock %}

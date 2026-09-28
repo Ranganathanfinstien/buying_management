@@ -1,0 +1,760 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-09-26 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "planning_tab",
+  "planning_section",
+  "requirement_engine_enabled",
+  "planning_buffer_days",
+  "planning_bucket",
+  "planning_horizon_days",
+  "plan_by_project",
+  "line_card_supplier_fallback",
+  "col_plan_1",
+  "abc_threshold_a",
+  "abc_threshold_b",
+  "abc_threshold_c",
+  "abc_default_class",
+  "abc_scope",
+  "moq_tolerance_percent",
+  "abc_classification_section",
+  "abc_lookback_months",
+  "col_abc",
+  "abc_pareto_a_percent",
+  "abc_pareto_b_percent",
+  "demand_section",
+  "excluded_order_types",
+  "excluded_warehouse_names",
+  "col_plan_2",
+  "include_open_production",
+  "include_safety_stock",
+  "purge_draft_auto_po_days",
+  "consumables_section",
+  "consumables_auto_po_enabled",
+  "consumables_project",
+  "col_cons",
+  "consumable_item_groups",
+  "supplier_tab",
+  "supplier_section",
+  "block_unapproved_supplier",
+  "require_bank_account",
+  "onboarding_questionnaire",
+  "rpn_mitigation_threshold",
+  "default_onboarding_supplier_group",
+  "audit_nc_procedure",
+  "col_sup",
+  "approval_full_chain_groups",
+  "approval_finance_only_groups",
+  "audit_required_groups",
+  "price_section",
+  "price_control_mode",
+  "col_price",
+  "price_request_roles",
+  "rfq_tab",
+  "rfq_section",
+  "bid_deadline_default_days",
+  "bid_deadline_default_time",
+  "bid_reminder_hours",
+  "otp_minutes",
+  "col_rfq",
+  "award_role",
+  "deadline_extension_role",
+  "rfq_approval_section",
+  "rfq_approval_tiers",
+  "po_tab",
+  "po_section",
+  "po_naming_series",
+  "inter_company_auto_so",
+  "amendment_rate_cap_percent",
+  "col_po",
+  "consumables_only_roles",
+  "consumables_exempt_roles",
+  "po_approval_section",
+  "po_approval_enabled",
+  "submit_po_on_final_approval",
+  "po_approval_rules",
+  "inward_tab",
+  "inward_section",
+  "gate_entry_required",
+  "gate_entry_lookback_days",
+  "iqc_gate",
+  "green_card_skips_iqc",
+  "min_remaining_shelf_life_percent",
+  "col_inward",
+  "batch_exempt_groups",
+  "boe_fiscal_year_check",
+  "rejected_warehouse_name",
+  "background_submit_rows",
+  "auto_create_inc",
+  "scrap_warehouse_name",
+  "use_boe_exchange_rate",
+  "invoice_no_edit_roles",
+  "bonded_section",
+  "bonded_goods_enabled",
+  "bonded_goods_warehouse_name",
+  "finance_tab",
+  "finance_section",
+  "tds_opening_balance_mode",
+  "invoice_approval_enabled",
+  "invoice_account_currency_check",
+  "invoice_maker_role",
+  "invoice_approver_role",
+  "col_fin",
+  "indent_cap_percent",
+  "indent_approval_limit_inr",
+  "indent_approval_limit_fx",
+  "indent_approver_roles",
+  "override_tab",
+  "company_overrides"
+ ],
+ "fields": [
+  {
+   "fieldname": "planning_tab",
+   "fieldtype": "Tab Break",
+   "label": "Planning"
+  },
+  {
+   "fieldname": "planning_section",
+   "fieldtype": "Section Break",
+   "label": "Requirement Engine and Auto PO Run"
+  },
+  {
+   "default": "1",
+   "fieldname": "requirement_engine_enabled",
+   "fieldtype": "Check",
+   "label": "Run Requirement Engine Nightly"
+  },
+  {
+   "default": "0",
+   "description": "Required date is pulled earlier by this many days (e.g. 15).",
+   "fieldname": "planning_buffer_days",
+   "fieldtype": "Int",
+   "label": "Planning Buffer Days"
+  },
+  {
+   "default": "Month",
+   "fieldname": "planning_bucket",
+   "fieldtype": "Select",
+   "label": "Shortage Bucket",
+   "options": "Month\nWeek\nExact Date"
+  },
+  {
+   "default": "365",
+   "fieldname": "planning_horizon_days",
+   "fieldtype": "Int",
+   "label": "Planning Horizon (Days)"
+  },
+  {
+   "default": "1",
+   "fieldname": "plan_by_project",
+   "fieldtype": "Check",
+   "label": "Plan by Project"
+  },
+  {
+   "default": "1",
+   "fieldname": "line_card_supplier_fallback",
+   "fieldtype": "Check",
+   "label": "Use Supplier Line Card when Item has no Default Supplier"
+  },
+  {
+   "fieldname": "col_plan_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "90",
+   "fieldname": "abc_threshold_a",
+   "fieldtype": "Percent",
+   "label": "Class A Threshold (% of MOQ)"
+  },
+  {
+   "default": "80",
+   "fieldname": "abc_threshold_b",
+   "fieldtype": "Percent",
+   "label": "Class B Threshold (% of MOQ)"
+  },
+  {
+   "default": "70",
+   "fieldname": "abc_threshold_c",
+   "fieldtype": "Percent",
+   "label": "Class C Threshold (% of MOQ)"
+  },
+  {
+   "default": "C",
+   "fieldname": "abc_default_class",
+   "fieldtype": "Select",
+   "label": "Default Class",
+   "options": "A\nB\nC"
+  },
+  {
+   "default": "Project",
+   "fieldname": "abc_scope",
+   "fieldtype": "Select",
+   "label": "Classify By",
+   "options": "Project\nCompany"
+  },
+  {
+   "default": "5",
+   "description": "Auto PO Exception may order MOQ directly when (1 - shortage/MOQ) is within this %.",
+   "fieldname": "moq_tolerance_percent",
+   "fieldtype": "Percent",
+   "label": "MOQ Tolerance for Direct PO (%)"
+  },
+  {
+   "fieldname": "abc_classification_section",
+   "fieldtype": "Section Break",
+   "label": "ABC Classification (weekly job)"
+  },
+  {
+   "default": "6",
+   "fieldname": "abc_lookback_months",
+   "fieldtype": "Int",
+   "label": "Consumption Lookback (Months)"
+  },
+  {
+   "fieldname": "col_abc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "70",
+   "fieldname": "abc_pareto_a_percent",
+   "fieldtype": "Percent",
+   "label": "Class A up to Cumulative Value (%)"
+  },
+  {
+   "default": "90",
+   "fieldname": "abc_pareto_b_percent",
+   "fieldtype": "Percent",
+   "label": "Class B up to Cumulative Value (%)"
+  },
+  {
+   "fieldname": "demand_section",
+   "fieldtype": "Section Break",
+   "label": "Demand and Supply Filters"
+  },
+  {
+   "default": "Maintenance",
+   "description": "One Sales Order order_type per line.",
+   "fieldname": "excluded_order_types",
+   "fieldtype": "Small Text",
+   "label": "Excluded Sales Order Types"
+  },
+  {
+   "default": "Rejected Goods\nE-WIP\nJob Work\nSales Return\nService",
+   "description": "Warehouse names (without company suffix), one per line, not counted as available stock.",
+   "fieldname": "excluded_warehouse_names",
+   "fieldtype": "Small Text",
+   "label": "Excluded Warehouse Names"
+  },
+  {
+   "fieldname": "col_plan_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "include_open_production",
+   "fieldtype": "Check",
+   "label": "Count Open Work Orders as Supply"
+  },
+  {
+   "default": "0",
+   "fieldname": "include_safety_stock",
+   "fieldtype": "Check",
+   "label": "Add Item Safety Stock to Demand"
+  },
+  {
+   "default": "0",
+   "description": "0 = never delete.",
+   "fieldname": "purge_draft_auto_po_days",
+   "fieldtype": "Int",
+   "label": "Delete Draft Auto POs Older Than (Days)"
+  },
+  {
+   "fieldname": "consumables_section",
+   "fieldtype": "Section Break",
+   "label": "Consumables Auto PO"
+  },
+  {
+   "default": "0",
+   "fieldname": "consumables_auto_po_enabled",
+   "fieldtype": "Check",
+   "label": "Create POs from Consumable Material Requests Daily"
+  },
+  {
+   "fieldname": "consumables_project",
+   "fieldtype": "Link",
+   "label": "Consumables Project",
+   "options": "Project"
+  },
+  {
+   "fieldname": "col_cons",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "consumable_item_groups",
+   "fieldtype": "Table MultiSelect",
+   "label": "Consumable Item Groups",
+   "options": "UB Item Group Link"
+  },
+  {
+   "fieldname": "supplier_tab",
+   "fieldtype": "Tab Break",
+   "label": "Supplier"
+  },
+  {
+   "fieldname": "supplier_section",
+   "fieldtype": "Section Break",
+   "label": "Supplier Approval and Onboarding"
+  },
+  {
+   "default": "Block",
+   "fieldname": "block_unapproved_supplier",
+   "fieldtype": "Select",
+   "label": "RFQ / PO to Supplier not Enabled",
+   "options": "Off\nWarn\nBlock"
+  },
+  {
+   "default": "1",
+   "fieldname": "require_bank_account",
+   "fieldtype": "Check",
+   "label": "Supplier needs a Bank Account before Approval"
+  },
+  {
+   "default": "1",
+   "fieldname": "onboarding_questionnaire",
+   "fieldtype": "Check",
+   "label": "Use Onboarding Questionnaire (Risk / Evaluation)"
+  },
+  {
+   "default": "27",
+   "fieldname": "rpn_mitigation_threshold",
+   "fieldtype": "Int",
+   "label": "RPN Needing Mitigation Plan"
+  },
+  {
+   "fieldname": "default_onboarding_supplier_group",
+   "fieldtype": "Link",
+   "label": "Default Supplier Group for Onboarding",
+   "options": "Supplier Group"
+  },
+  {
+   "fieldname": "audit_nc_procedure",
+   "fieldtype": "Link",
+   "label": "Quality Procedure for Audit Non Conformance",
+   "options": "Quality Procedure"
+  },
+  {
+   "fieldname": "col_sup",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "approval_full_chain_groups",
+   "fieldtype": "Table MultiSelect",
+   "label": "Groups: Purchase \u2192 Quality \u2192 Finance Approval",
+   "options": "UB Supplier Group Link"
+  },
+  {
+   "fieldname": "approval_finance_only_groups",
+   "fieldtype": "Table MultiSelect",
+   "label": "Groups: Finance Approval Only",
+   "options": "UB Supplier Group Link"
+  },
+  {
+   "fieldname": "audit_required_groups",
+   "fieldtype": "Table MultiSelect",
+   "label": "Groups Needing Supplier Audit Log",
+   "options": "UB Supplier Group Link"
+  },
+  {
+   "fieldname": "price_section",
+   "fieldtype": "Section Break",
+   "label": "Price Control"
+  },
+  {
+   "default": "Strict",
+   "fieldname": "price_control_mode",
+   "fieldtype": "Select",
+   "label": "PO Rate Control",
+   "options": "Strict\nWarn\nFree"
+  },
+  {
+   "fieldname": "col_price",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "price_request_roles",
+   "fieldtype": "Table MultiSelect",
+   "label": "Roles Allowed to Raise Item Price Request",
+   "options": "UB Role Link"
+  },
+  {
+   "fieldname": "rfq_tab",
+   "fieldtype": "Tab Break",
+   "label": "RFQ"
+  },
+  {
+   "fieldname": "rfq_section",
+   "fieldtype": "Section Break",
+   "label": "Bidding"
+  },
+  {
+   "default": "7",
+   "fieldname": "bid_deadline_default_days",
+   "fieldtype": "Int",
+   "label": "Default Bid Deadline (Days)"
+  },
+  {
+   "default": "17:00:00",
+   "fieldname": "bid_deadline_default_time",
+   "fieldtype": "Time",
+   "label": "Default Bid Deadline Time"
+  },
+  {
+   "default": "24",
+   "fieldname": "bid_reminder_hours",
+   "fieldtype": "Int",
+   "label": "Reminder Before Deadline (Hours)"
+  },
+  {
+   "default": "10",
+   "fieldname": "otp_minutes",
+   "fieldtype": "Int",
+   "label": "Quotation View Code Validity (Minutes)"
+  },
+  {
+   "fieldname": "col_rfq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "award_role",
+   "fieldtype": "Link",
+   "label": "Role that Awards Quotations",
+   "options": "Role"
+  },
+  {
+   "default": "Purchase Manager",
+   "fieldname": "deadline_extension_role",
+   "fieldtype": "Link",
+   "label": "Role that Extends Bid Deadlines",
+   "options": "Role"
+  },
+  {
+   "description": "Evaluated in row order after bidding closes. The RFQ workflow is rebuilt from this table on save.",
+   "fieldname": "rfq_approval_section",
+   "fieldtype": "Section Break",
+   "label": "RFQ Approval Tiers"
+  },
+  {
+   "fieldname": "rfq_approval_tiers",
+   "fieldtype": "Table",
+   "label": "RFQ Approval Tiers",
+   "options": "UB RFQ Approval Tier"
+  },
+  {
+   "fieldname": "po_tab",
+   "fieldtype": "Tab Break",
+   "label": "Purchase Order"
+  },
+  {
+   "fieldname": "po_section",
+   "fieldtype": "Section Break",
+   "label": "Purchase Order"
+  },
+  {
+   "default": "PUR-.{abbr}.-.YYYY.-.#####",
+   "description": "{abbr} is replaced by the company abbreviation.",
+   "fieldname": "po_naming_series",
+   "fieldtype": "Data",
+   "label": "PO Naming Pattern"
+  },
+  {
+   "default": "1",
+   "fieldname": "inter_company_auto_so",
+   "fieldtype": "Check",
+   "label": "Create Sales Order in Other Company for Internal Supplier POs"
+  },
+  {
+   "default": "5",
+   "fieldname": "amendment_rate_cap_percent",
+   "fieldtype": "Percent",
+   "label": "PO Amendment Rate Increase Cap (%)"
+  },
+  {
+   "fieldname": "col_po",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "consumables_only_roles",
+   "fieldtype": "Table MultiSelect",
+   "label": "Roles Limited to Consumable Item Groups",
+   "options": "UB Role Link"
+  },
+  {
+   "fieldname": "consumables_exempt_roles",
+   "fieldtype": "Table MultiSelect",
+   "label": "Roles Never Limited to Consumables",
+   "options": "UB Role Link"
+  },
+  {
+   "fieldname": "po_approval_section",
+   "fieldtype": "Section Break",
+   "label": "PO Approval"
+  },
+  {
+   "default": "1",
+   "fieldname": "po_approval_enabled",
+   "fieldtype": "Check",
+   "label": "PO Approval Enabled"
+  },
+  {
+   "default": "1",
+   "fieldname": "submit_po_on_final_approval",
+   "fieldtype": "Check",
+   "label": "Submit PO on Final Approval"
+  },
+  {
+   "description": "Rows with the same company, amount band and origin form one approval chain, run in Step order.",
+   "fieldname": "po_approval_rules",
+   "fieldtype": "Table",
+   "label": "PO Approval Rules",
+   "options": "UB PO Approval Rule"
+  },
+  {
+   "fieldname": "inward_tab",
+   "fieldtype": "Tab Break",
+   "label": "Inward"
+  },
+  {
+   "fieldname": "inward_section",
+   "fieldtype": "Section Break",
+   "label": "Receiving and Quality"
+  },
+  {
+   "default": "1",
+   "fieldname": "gate_entry_required",
+   "fieldtype": "Check",
+   "label": "Gate Entry Required on Purchase Receipt"
+  },
+  {
+   "default": "90",
+   "fieldname": "gate_entry_lookback_days",
+   "fieldtype": "Int",
+   "label": "Gate Entry Pick List Lookback (Days)"
+  },
+  {
+   "default": "Block",
+   "fieldname": "iqc_gate",
+   "fieldtype": "Select",
+   "label": "Block Receipt Submit without Quality Inspection",
+   "options": "Off\nWarn\nBlock"
+  },
+  {
+   "default": "1",
+   "fieldname": "green_card_skips_iqc",
+   "fieldtype": "Check",
+   "label": "Green Card Suppliers Skip Inspection"
+  },
+  {
+   "default": "75",
+   "fieldname": "min_remaining_shelf_life_percent",
+   "fieldtype": "Percent",
+   "label": "Minimum Remaining Shelf Life at Receipt (%)"
+  },
+  {
+   "fieldname": "col_inward",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "batch_exempt_groups",
+   "fieldtype": "Table MultiSelect",
+   "label": "Item Groups Exempt from Batch",
+   "options": "UB Item Group Link"
+  },
+  {
+   "default": "1",
+   "fieldname": "boe_fiscal_year_check",
+   "fieldtype": "Check",
+   "label": "Bill of Entry Date Must Be in Fiscal Year"
+  },
+  {
+   "default": "Rejected Goods",
+   "fieldname": "rejected_warehouse_name",
+   "fieldtype": "Data",
+   "label": "Rejected Warehouse Name"
+  },
+  {
+   "default": "100",
+   "fieldname": "background_submit_rows",
+   "fieldtype": "Int",
+   "label": "Submit Receipts / Invoices in Background Above (Rows)"
+  },
+  {
+   "default": "1",
+   "fieldname": "auto_create_inc",
+   "fieldtype": "Check",
+   "label": "Create Item Non Conformance on Rejected Inspection"
+  },
+  {
+   "default": "Scrap",
+   "fieldname": "scrap_warehouse_name",
+   "fieldtype": "Data",
+   "label": "Scrap Warehouse Name"
+  },
+  {
+   "default": "1",
+   "fieldname": "use_boe_exchange_rate",
+   "fieldtype": "Check",
+   "label": "Import Receipts Use Exchange Rate of BoE Date"
+  },
+  {
+   "fieldname": "invoice_no_edit_roles",
+   "fieldtype": "Table MultiSelect",
+   "label": "Roles Allowed to Edit Supplier Invoice No after Submit",
+   "options": "UB Role Link"
+  },
+  {
+   "fieldname": "bonded_section",
+   "fieldtype": "Section Break",
+   "label": "Bonded Goods"
+  },
+  {
+   "default": "0",
+   "fieldname": "bonded_goods_enabled",
+   "fieldtype": "Check",
+   "label": "Bonded Goods Route Enabled"
+  },
+  {
+   "default": "Bonded Goods",
+   "fieldname": "bonded_goods_warehouse_name",
+   "fieldtype": "Data",
+   "label": "Bonded Goods Warehouse Name"
+  },
+  {
+   "fieldname": "finance_tab",
+   "fieldtype": "Tab Break",
+   "label": "Finance"
+  },
+  {
+   "fieldname": "finance_section",
+   "fieldtype": "Section Break",
+   "label": "Invoice and Payment"
+  },
+  {
+   "default": "0",
+   "fieldname": "tds_opening_balance_mode",
+   "fieldtype": "Check",
+   "label": "Use Supplier TDS Opening Balance"
+  },
+  {
+   "default": "0",
+   "fieldname": "invoice_approval_enabled",
+   "fieldtype": "Check",
+   "label": "Purchase Invoice Approval Enabled"
+  },
+  {
+   "default": "Block",
+   "fieldname": "invoice_account_currency_check",
+   "fieldtype": "Select",
+   "label": "Credit Account Currency Must Match Invoice",
+   "options": "Off\nWarn\nBlock"
+  },
+  {
+   "default": "Accounts User",
+   "fieldname": "invoice_maker_role",
+   "fieldtype": "Link",
+   "label": "Invoice Approval: Maker Role",
+   "options": "Role"
+  },
+  {
+   "default": "Accounts Manager",
+   "fieldname": "invoice_approver_role",
+   "fieldtype": "Link",
+   "label": "Invoice Approval: Approver Role",
+   "options": "Role"
+  },
+  {
+   "fieldname": "col_fin",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "110",
+   "fieldname": "indent_cap_percent",
+   "fieldtype": "Percent",
+   "label": "Payment Indent Cap (% of Value)"
+  },
+  {
+   "default": "500000",
+   "fieldname": "indent_approval_limit_inr",
+   "fieldtype": "Currency",
+   "label": "Payment Indent Approval Limit (INR)"
+  },
+  {
+   "default": "5000",
+   "fieldname": "indent_approval_limit_fx",
+   "fieldtype": "Currency",
+   "label": "Payment Indent Approval Limit (Foreign Currency)"
+  },
+  {
+   "fieldname": "indent_approver_roles",
+   "fieldtype": "Table MultiSelect",
+   "label": "Payment Indent Approver Roles",
+   "options": "UB Role Link"
+  },
+  {
+   "fieldname": "override_tab",
+   "fieldtype": "Tab Break",
+   "label": "Company Overrides"
+  },
+  {
+   "fieldname": "company_overrides",
+   "fieldtype": "Table",
+   "label": "Company Overrides",
+   "options": "UB Company Override"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "is_submittable": 0,
+ "issingle": 1,
+ "istable": 0,
+ "links": [],
+ "modified": "2026-09-26 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Universal Buying",
+ "name": "Buying Control Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Purchase Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Purchase User",
+   "share": 1,
+   "write": 0
+  }
+ ],
+ "quick_entry": 0,
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

@@ -1,0 +1,413 @@
+{% extends "templates/web.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head_include %}
+<meta name="robots" content="noindex, nofollow">
+<style>
+  @media print { .no-print { display: none !important; } }
+  .qc-page { max-width: 1400px; margin: 0 auto; padding: 20px 16px; font-family: Arial, sans-serif; font-size: 13px; color: #333; }
+  .qc-title { text-align: center; font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .qc-subtitle { text-align: center; font-size: 12px; color: #555; margin-bottom: 16px; line-height: 1.8; }
+  .qc-toolbar { display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 12px; }
+  .btn-print { padding: 6px 16px; background: #2d3748; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; }
+  .qc-scroll { overflow-x: auto; }
+  .cmp-table { width: 100%; border-collapse: collapse; min-width: 720px; }
+  .cmp-table th, .cmp-table td { border: 1px solid #aaa; padding: 7px 10px; vertical-align: middle; word-wrap: break-word; font-size: 12px; text-align: center; }
+  .cmp-table thead th { background-color: #1e3a5f; color: #fff; font-size: 11px; font-weight: bold; }
+  .cat-cell { background-color: #d9e1f2; font-weight: bold; font-size: 11px; color: #1a202c; width: 80px; }
+  .param-cell { background-color: #f5f5f5; font-size: 11px; color: #2d3748; text-align: left !important; padding-left: 12px; min-width: 220px; }
+  .val-amt { text-align: right !important; font-variant-numeric: tabular-nums; }
+  .val-text { text-align: center; }
+  .sub { display: block; font-size: 10px; color: #888; }
+  .diff-up { color: #c53030; font-weight: 600; }
+  .diff-down { color: #2f855a; font-weight: 600; }
+  .total-row td { font-weight: bold; background-color: #eaf0fb; }
+  .grand-row td { font-weight: bold; background-color: #bee3f8; }
+  .lowest { background-color: #c6f6d5 !important; color: #22543d; font-weight: bold; }
+  .empty-val { color: #bbb; }
+  .status-ok { color: #276749; font-weight: 600; }
+  .status-warn { color: #b7791f; font-weight: 600; }
+  .winner { outline: 3px solid #38a169; outline-offset: -3px; }
+  .panel { margin-top: 20px; border: 2px solid #2b6cb0; border-radius: 8px; overflow: hidden; }
+  .panel-header { background: #2b6cb0; color: #fff; padding: 11px 18px; font-size: 13px; font-weight: bold; }
+  .panel-body { padding: 16px 18px; background: #fff; }
+  .panel textarea, .hod-input { width: 100%; border: 1px solid #cbd5e0; border-radius: 4px; padding: 8px 10px; font-size: 12px; resize: vertical; min-height: 56px; }
+  .actions { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .btn-award { padding: 9px 26px; background: #38a169; color: #fff; border: none; border-radius: 4px; font-size: 13px; font-weight: bold; cursor: pointer; }
+  .btn-award:disabled { background: #a0aec0; cursor: not-allowed; }
+  .btn-reject { padding: 9px 22px; background: #fff; color: #e53e3e; border: 2px solid #e53e3e; border-radius: 4px; font-size: 13px; font-weight: bold; cursor: pointer; }
+  .btn-small { padding: 3px 10px; font-size: 11px; border: 1px solid #2b6cb0; color: #2b6cb0; background: #fff; border-radius: 4px; cursor: pointer; margin-top: 4px; }
+  .banner { display: flex; gap: 14px; margin-top: 20px; padding: 14px 18px; border-radius: 8px; font-size: 13px; }
+  .banner-ok { background: #f0fff4; border: 1.5px solid #38a169; color: #22543d; }
+  .banner-bad { background: #fff5f5; border: 1.5px solid #e53e3e; color: #742a2a; }
+  .qc-footer { margin-top: 12px; font-size: 11px; color: #718096; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .chat-cell { background: #f8fafc; vertical-align: top !important; text-align: left !important; padding: 6px !important; }
+  .chat-msgs { height: 220px; overflow-y: auto; background: #fff; border: 1px solid #cbd5e0; border-radius: 6px; padding: 6px; margin-bottom: 6px; }
+  .chat-empty { color: #a0aec0; font-size: 11px; text-align: center; margin-top: 90px; }
+  .chat-line { display: flex; margin: 4px 0; }
+  .chat-line.buyer { justify-content: flex-end; }
+  .chat-bubble { max-width: 88%; border-radius: 8px; padding: 5px 8px; font-size: 11.5px; border: 1px solid #e2e8f0; background: #fff; }
+  .chat-line.buyer .chat-bubble { background: #e0ecff; }
+  .chat-line.internal .chat-bubble { background: #fef3c7; border-color: #f6d365; }
+  .chat-meta { font-size: 10px; color: #718096; margin-bottom: 2px; }
+  .chat-text { white-space: pre-wrap; word-break: break-word; color: #1a202c; }
+  .chat-input { width: 100%; border: 1px solid #cbd5e0; border-radius: 4px; padding: 6px 8px; font-size: 12px; resize: vertical; min-height: 44px; }
+  .chat-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; gap: 6px; }
+  .chat-actions label { font-size: 10.5px; color: #4a5568; display: flex; align-items: center; gap: 4px; margin: 0; }
+</style>
+{% endblock %}
+
+{% block page_content %}
+{% set cur = company_currency %}
+<div class="qc-page">
+  <div class="qc-title">Quotation Comparison</div>
+  <div class="qc-subtitle">
+    <strong>{{ rfq_name }}</strong>{% if rfq.title %} | {{ rfq.title | e }}{% endif %}
+    | {{ rfq.company | e }}
+    {% if rfq.get("ub_po_type") %} | PO Type: <strong>{{ rfq.ub_po_type | e }}</strong>{% endif %}
+    <br>State: <strong>{{ workflow_state or "-" }}</strong>
+    {% if rfq.get("ub_bid_status") %} | Bidding: <strong>{{ rfq.ub_bid_status }}</strong>{% endif %}
+    {% if rfq.get("ub_bid_deadline") %} | Deadline: {{ frappe.format(rfq.ub_bid_deadline, {"fieldtype": "Datetime"}) }}{% endif %}
+  </div>
+
+  {% if no_quotations %}
+  <div class="banner banner-bad"><div>No live quotations have been received for this RFQ yet.</div></div>
+  {% else %}
+  <div class="qc-toolbar no-print">
+    <a class="btn-print" style="text-decoration:none;" href="/app/request-for-quotation/{{ rfq_name }}">Open RFQ</a>
+    <button class="btn-print" onclick="window.print()">Print</button>
+  </div>
+
+  <div class="qc-scroll">
+  <table class="cmp-table">
+    <thead>
+      <tr>
+        <th rowspan="2">Category</th>
+        <th rowspan="2">Parameter</th>
+        {% for sq in quotes %}
+        <th class="{% if sq.name == awarded_quotation %}winner{% endif %}">{{ (sq.supplier_name or sq.supplier or sq.ub_prospective_supplier) | e }}</th>
+        {% endfor %}
+      </tr>
+      <tr>
+        {% for sq in quotes %}
+        <th style="font-weight:normal;"><a href="/app/supplier-quotation/{{ sq.name }}" style="color:#bee3f8;">{{ sq.name }}</a>
+          <span class="sub" style="color:#cbd5e0;">{{ frappe.format(sq.transaction_date, {"fieldtype": "Date"}) }}{% if sq.ub_portal_revision %} | v{{ sq.ub_portal_revision }}{% endif %}</span></th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="cat-cell">Supplier</td>
+        <td class="param-cell">Approval status</td>
+        {% for sq in quotes %}{% set st = supplier_status[sq.name] %}
+        <td class="val-text {% if st.ok %}status-ok{% else %}status-warn{% endif %}">{{ st.label | e }}</td>
+        {% endfor %}
+      </tr>
+
+      {% for item in rfq_items %}
+      <tr>
+        {% if loop.first %}<td class="cat-cell" rowspan="{{ rfq_items|length }}">Price<br><span class="sub">({{ cur }})</span></td>{% endif %}
+        <td class="param-cell">
+          <strong>{{ item.idx }}. {{ item.description | e }}</strong>
+          <span class="sub">{% if item.item_code %}{{ item.item_code | e }} | {% endif %}{{ item.qty }} {{ item.uom | e }}</span>
+        </td>
+        {% for sq in quotes %}{% set c = cells.get(sq.name, {}).get(item.name) %}
+        <td class="val-amt">
+          {% if c and c.rate %}
+            {{ "{:,.2f}".format(c.amount or 0) }}
+            <span class="sub">@ {{ "{:,.2f}".format(c.rate) }} / {{ c.uom | e }}{% if c.qty != item.qty %} | qty {{ c.qty }}{% endif %}</span>
+            {% if c.moq or c.spq or c.lead_time_days %}<span class="sub">{% if c.moq %}MOQ {{ c.moq }} {% endif %}{% if c.spq %}SPQ {{ c.spq }} {% endif %}{% if c.lead_time_days %}LT {{ c.lead_time_days }}d{% endif %}</span>{% endif %}
+            {% if c.current_rate %}
+              <span class="sub">Current price {{ "{:,.2f}".format(c.current_rate) }}{% if c.current_supplier %} ({{ c.current_supplier | e }}){% endif %}:
+                <span class="{% if c.diff > 0 %}diff-up{% else %}diff-down{% endif %}">{% if c.diff > 0 %}+{% endif %}{{ "{:,.2f}".format(c.diff) }} ({% if c.diff_pct > 0 %}+{% endif %}{{ "{:,.1f}".format(c.diff_pct) }}%)</span></span>
+            {% endif %}
+            {% if c.remarks %}<span class="sub" style="font-style:italic;">{{ c.remarks | e }}</span>{% endif %}
+          {% else %}<span class="empty-val">not quoted</span>{% endif %}
+        </td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+
+      <tr class="total-row">
+        <td class="cat-cell" rowspan="6">Totals<br><span class="sub">({{ cur }})</span></td>
+        <td class="param-cell">Net total</td>
+        {% for sq in quotes %}<td class="val-amt">{{ "{:,.2f}".format(sq.base_net_total or 0) }}</td>{% endfor %}
+      </tr>
+      <tr>
+        <td class="param-cell">Taxes</td>
+        {% for sq in quotes %}<td class="val-amt">{% if sq.base_total_taxes_and_charges %}{{ "{:,.2f}".format(sq.base_total_taxes_and_charges) }}{% else %}<span class="empty-val">-</span>{% endif %}</td>{% endfor %}
+      </tr>
+      {% for key, label in [("freight_insurance", "Freight &amp; insurance"), ("packing_forwarding", "Packing &amp; forwarding"), ("installation", "Installation &amp; commissioning")] %}
+      <tr>
+        <td class="param-cell">{{ label }}</td>
+        {% for sq in quotes %}
+        <td class="val-text">{{ sq.get("ub_" ~ key) or "-" }}{% if sq.get("ub_" ~ key ~ "_desc") %}<span class="sub">{{ sq.get("ub_" ~ key ~ "_desc") | e }}</span>{% endif %}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+      <tr class="grand-row">
+        <td class="param-cell">Landed total</td>
+        {% for sq in quotes %}
+        <td class="val-amt {% if (sq.base_grand_total or 0) == lowest_total %}lowest{% endif %}">{{ "{:,.2f}".format(sq.base_grand_total or 0) }}
+          {% if sq.currency != cur %}<span class="sub">{{ sq.currency }} {{ "{:,.2f}".format(sq.grand_total or 0) }}</span>{% endif %}</td>
+        {% endfor %}
+      </tr>
+
+      <tr>
+        <td class="cat-cell" rowspan="2">Delivery</td>
+        <td class="param-cell">Lead time (days)</td>
+        {% for sq in quotes %}<td class="val-text">{{ sq.get("ub_lead_time_days") or "-" }}</td>{% endfor %}
+      </tr>
+      <tr>
+        <td class="param-cell">Valid until</td>
+        {% for sq in quotes %}<td class="val-text">{% if sq.valid_till %}{{ frappe.format(sq.valid_till, {"fieldtype": "Date"}) }}{% else %}-{% endif %}</td>{% endfor %}
+      </tr>
+
+      {% if terms_params %}
+        {% for param in terms_params %}
+        <tr>
+          {% if loop.first %}<td class="cat-cell" rowspan="{{ terms_params|length }}">Payment<br>terms</td>{% endif %}
+          <td class="param-cell">{{ param | e }}</td>
+          {% for sq in quotes %}{% set v = terms_map.get(sq.name, {}).get(param) %}
+          <td class="val-text">{% if v is not none %}{{ v }}%{% else %}-{% endif %}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      {% else %}
+      <tr><td class="cat-cell">Payment<br>terms</td><td class="param-cell">-</td>{% for sq in quotes %}<td class="val-text">-</td>{% endfor %}</tr>
+      {% endif %}
+
+      {% if tech_params %}
+        {% for param in tech_params %}
+        <tr>
+          {% if loop.first %}<td class="cat-cell" rowspan="{{ tech_params|length }}">Technical<br>specs</td>{% endif %}
+          <td class="param-cell">{{ param | e }}</td>
+          {% for sq in quotes %}<td class="val-text">{{ (tech_map.get(sq.name, {}).get(param) or "-") | e }}</td>{% endfor %}
+        </tr>
+        {% endfor %}
+      {% endif %}
+
+      <tr>
+        <td class="cat-cell">Attachment</td>
+        <td class="param-cell">Supplier document</td>
+        {% for sq in quotes %}<td class="val-text">{% if sq.get("ub_quotation_attachment") %}<a href="{{ sq.ub_quotation_attachment }}" target="_blank">Open</a>{% else %}-{% endif %}</td>{% endfor %}
+      </tr>
+
+      <tr>
+        <td class="cat-cell">Recommendation</td>
+        <td class="param-cell">Reviewer remarks</td>
+        {% for sq in quotes %}
+        <td style="text-align:left;background:#fffbf0;">
+          <span style="font-size:11px;font-style:italic;color:#744210;" id="hod-text-{{ sq.name }}">{{ (sq.get("ub_hod_remarks") or "") | e }}</span>
+          {% if can_recommend %}
+          <div class="no-print">
+            <textarea class="hod-input" id="hod-{{ sq.name }}" placeholder="Recommendation" style="min-height:40px;margin-top:4px;">{{ (sq.get("ub_hod_remarks") or "") | e }}</textarea>
+            <button class="btn-small" onclick="saveRecommendation('{{ sq.name }}')">Save</button>
+          </div>
+          {% endif %}
+        </td>
+        {% endfor %}
+      </tr>
+
+      <tr class="no-print">
+        <td class="cat-cell">Discussion</td>
+        <td class="param-cell">Chat with the supplier<span class="sub">Blue = buyer, white = supplier, yellow = internal note (not shown to supplier)</span></td>
+        {% for sq in quotes %}{% set row = chat_rows.get(sq.name) %}
+        <td class="chat-cell">
+          {% if row %}
+          <div class="chat-msgs" id="chat-{{ row }}"><div class="chat-empty">Loading...</div></div>
+          <textarea class="chat-input" id="chat-in-{{ row }}" placeholder="Message to {{ (sq.supplier_name or sq.ub_prospective_supplier or '') | e }}"></textarea>
+          <div class="chat-actions">
+            <label><input type="checkbox" id="chat-int-{{ row }}"> Internal note</label>
+            <button class="btn-small" style="margin-top:0;" onclick="sendChat('{{ row }}')">Send</button>
+          </div>
+          {% else %}<span class="empty-val">Supplier not on this RFQ</span>{% endif %}
+        </td>
+        {% endfor %}
+      </tr>
+
+      {% if can_award %}
+      <tr class="no-print">
+        <td class="cat-cell">Award</td>
+        <td class="param-cell" style="font-weight:600;color:#2b6cb0;">Select the winning quotation</td>
+        {% for sq in quotes %}
+        <td style="background:#f0f4ff;">
+          <label style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <input type="radio" name="sq_select" value="{{ sq.name }}" data-label="{{ (sq.supplier_name or sq.ub_prospective_supplier or '') | e }} - {{ cur }} {{ '{:,.2f}'.format(sq.base_grand_total or 0) }}" onchange="onSelect(this)">
+            <span style="font-size:10px;color:#2b6cb0;font-weight:600;">Select</span>
+          </label>
+        </td>
+        {% endfor %}
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+  </div>
+
+  {% if can_award %}
+  <div class="panel no-print">
+    <div class="panel-header">Award ({{ award_role }}) - final approval state "{{ final_state }}"</div>
+    <div class="panel-body">
+      <div id="selInfo" style="display:none;padding:8px 12px;background:#ebf4ff;border-radius:5px;font-size:12px;margin-bottom:10px;"></div>
+      <label style="font-size:11px;font-weight:600;color:#4a5568;">Remarks (required to reject)</label>
+      <textarea id="decisionRemarks" placeholder="Reason for the decision"></textarea>
+      <div class="actions">
+        <button class="btn-award" id="btnAward" onclick="awardSelected()" disabled>Award selected quotation</button>
+        <button class="btn-reject" id="btnReject" onclick="rejectRfq()">Reject RFQ</button>
+      </div>
+      <p style="font-size:11px;color:#a0aec0;margin-top:10px;">Award approves and submits the selected quotation, rejects the others and sets the RFQ to Awarded.
+        Then create the Purchase Order from the approved quotation (Create &gt; Purchase Order).</p>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if workflow_state == "Awarded" %}
+  <div class="banner banner-ok no-print">
+    <div>
+      <div style="font-weight:bold;font-size:14px;">Awarded</div>
+      <div style="font-size:12px;margin-top:3px;">Quotation: <a href="/app/supplier-quotation/{{ awarded_quotation }}"><strong>{{ awarded_quotation }}</strong></a>
+        | By: <strong>{{ awarded_by }}</strong> | On: <strong>{{ awarded_on }}</strong></div>
+      {% if award_remarks %}<div style="font-size:11px;margin-top:4px;font-style:italic;">"{{ award_remarks | e }}"</div>{% endif %}
+    </div>
+  </div>
+  {% elif workflow_state == "Rejected" %}
+  <div class="banner banner-bad no-print">
+    <div>
+      <div style="font-weight:bold;font-size:14px;">Rejected</div>
+      {% if awarded_by %}<div style="font-size:12px;margin-top:3px;">By: <strong>{{ awarded_by }}</strong> | On: <strong>{{ awarded_on }}</strong></div>{% endif %}
+      {% if award_remarks %}<div style="font-size:11px;margin-top:4px;font-style:italic;">"{{ award_remarks | e }}"</div>{% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="qc-footer">
+    <span>Landed total in green = lowest. Amounts in {{ cur }} (company currency). "Current price" = approved buying Item Price.</span>
+    <span>{{ quotes|length }} live quotation(s) | {{ rfq_name }}</span>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+const RFQ_NAME = {{ rfq_name | tojson }};
+let selectedSQ = null;
+
+function onSelect(radio) {
+  selectedSQ = radio.value;
+  const info = document.getElementById("selInfo");
+  info.textContent = "Selected: " + radio.dataset.label + " (" + selectedSQ + ")";
+  info.style.display = "block";
+  document.getElementById("btnAward").disabled = false;
+  document.querySelectorAll("input[name=sq_select]").forEach(r => {
+    r.closest("td").style.background = r.value === selectedSQ ? "#e6f4ea" : "#f0f4ff";
+  });
+}
+
+function callServer(method, args, busyBtn, busyText, onDone) {
+  const original = busyBtn ? busyBtn.textContent : "";
+  if (busyBtn) { busyBtn.disabled = true; busyBtn.textContent = busyText; }
+  frappe.call({
+    method: "universal_buying.ub_sourcing.comparison." + method,
+    args: args,
+    callback: (r) => { if (!r.exc && onDone) onDone(r.message); },
+    always: (data) => {
+      if (busyBtn && (!data || data.exc || !data.message)) { busyBtn.disabled = false; busyBtn.textContent = original; }
+    },
+  });
+}
+
+function awardSelected() {
+  if (!selectedSQ) { frappe.msgprint("Please select a quotation first."); return; }
+  const remarks = document.getElementById("decisionRemarks").value;
+  frappe.confirm("Award <strong>" + frappe.utils.escape_html(selectedSQ) + "</strong>? This cannot be undone.", () => {
+    callServer("award_quotation", { rfq_name: RFQ_NAME, sq_name: selectedSQ, remarks: remarks },
+      document.getElementById("btnAward"), "Awarding...", (m) => {
+      if (m && m.warning) {
+        frappe.msgprint({ message: m.warning, indicator: "orange", title: "Awarded with warnings" });
+        setTimeout(() => location.reload(), 2500);
+      } else {
+        location.reload();
+      }
+    });
+  });
+}
+
+function rejectRfq() {
+  const remarks = document.getElementById("decisionRemarks").value.trim();
+  if (!remarks) { frappe.msgprint("Please enter the reason for rejecting."); return; }
+  frappe.confirm("Reject this RFQ? All quotations will be marked Rejected.", () => {
+    callServer("reject_rfq", { rfq_name: RFQ_NAME, remarks: remarks }, document.getElementById("btnReject"), "Rejecting...",
+      () => location.reload());
+  });
+}
+
+const CHAT_ROWS = {{ (chat_rows or {}) | tojson }};
+
+function renderChat(row, messages) {
+  const box = document.getElementById("chat-" + row);
+  if (!box) return;
+  const nearBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 40;
+  if (!messages || !messages.length) {
+    box.innerHTML = '<div class="chat-empty">No messages yet</div>';
+    return;
+  }
+  const esc = frappe.utils.escape_html;
+  box.innerHTML = messages.map(m => {
+    const cls = "chat-line" + (m.sender_type === "Buyer" ? " buyer" : "") + (m.is_internal ? " internal" : "");
+    const tag = m.is_internal ? " | internal" : "";
+    return '<div class="' + cls + '"><div class="chat-bubble"><div class="chat-meta">' + esc(m.sender_name) + " | " + esc(m.time) + tag +
+      '</div><div class="chat-text">' + esc(m.message) + "</div></div></div>";
+  }).join("");
+  if (nearBottom || box.dataset.loaded !== "1") box.scrollTop = box.scrollHeight;
+  box.dataset.loaded = "1";
+}
+
+function loadChats() {
+  if (!Object.values(CHAT_ROWS).some(Boolean)) return;
+  frappe.call({
+    method: "universal_buying.ub_sourcing.chat.get_threads",
+    args: { rfq_name: RFQ_NAME },
+    callback: (r) => {
+      const threads = r.message || {};
+      Object.values(CHAT_ROWS).forEach(row => { if (row) renderChat(row, (threads[row] || {}).messages || []); });
+    },
+  });
+}
+
+function sendChat(row) {
+  const input = document.getElementById("chat-in-" + row);
+  const text = (input.value || "").trim();
+  if (!text) return;
+  const internal = document.getElementById("chat-int-" + row).checked ? 1 : 0;
+  frappe.call({
+    method: "universal_buying.ub_sourcing.chat.post_message",
+    type: "POST",
+    args: { rfq_name: RFQ_NAME, rfq_supplier_row: row, message: text, is_internal: internal },
+    callback: (r) => {
+      if (r.exc) return;
+      input.value = "";
+      renderChat(row, r.message || []);
+    },
+  });
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && (e.ctrlKey || e.metaKey) && e.target.classList && e.target.classList.contains("chat-input")) {
+    sendChat(e.target.id.replace("chat-in-", ""));
+  }
+});
+
+if (typeof frappe !== "undefined" && frappe.call) {
+  loadChats();
+  setInterval(loadChats, 20000);
+}
+
+function saveRecommendation(sqName) {
+  const text = document.getElementById("hod-" + sqName).value;
+  callServer("save_hod_recommendation", { sq_name: sqName, remarks: text }, null, "", () => {
+    document.getElementById("hod-text-" + sqName).textContent = text;
+    frappe.show_alert({ message: "Recommendation saved", indicator: "green" });
+  });
+}
+</script>
+{% endblock %}

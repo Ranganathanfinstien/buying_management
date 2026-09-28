@@ -1,0 +1,21 @@
+{
+ "app": "universal_buying",
+ "creation": "2026-09-26 12:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Desktop Icon",
+ "hidden": 0,
+ "icon": "buying",
+ "icon_type": "Link",
+ "idx": 1,
+ "label": "Universal Buying",
+ "link_to": "Universal Buying",
+ "link_type": "Workspace Sidebar",
+ "modified": "2026-09-26 12:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "Universal Buying",
+ "owner": "Administrator",
+ "parent_icon": "",
+ "restrict_removal": 0,
+ "roles": [],
+ "standard": 1
+}

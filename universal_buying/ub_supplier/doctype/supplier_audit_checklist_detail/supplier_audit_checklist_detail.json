@@ -1,0 +1,106 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-09-26 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "group",
+  "question",
+  "options",
+  "max_score",
+  "minimum_score_required_section",
+  "industrial",
+  "railways",
+  "column_break_neti",
+  "automotive",
+  "defence_aerospace",
+  "column_break_hufg",
+  "medical"
+ ],
+ "fields": [
+  {
+   "fieldname": "group",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Group",
+   "reqd": 1
+  },
+  {
+   "fieldname": "question",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Question",
+   "reqd": 1
+  },
+  {
+   "description": "One answer per line, lowest score first.",
+   "fieldname": "options",
+   "fieldtype": "Small Text",
+   "label": "Options",
+   "reqd": 1
+  },
+  {
+   "fieldname": "max_score",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Max Score"
+  },
+  {
+   "fieldname": "minimum_score_required_section",
+   "fieldtype": "Section Break",
+   "label": "Minimum Score Required by Industry"
+  },
+  {
+   "fieldname": "industrial",
+   "fieldtype": "Int",
+   "label": "Industrial"
+  },
+  {
+   "fieldname": "railways",
+   "fieldtype": "Int",
+   "label": "Railways"
+  },
+  {
+   "fieldname": "column_break_neti",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "automotive",
+   "fieldtype": "Int",
+   "label": "Automotive"
+  },
+  {
+   "fieldname": "defence_aerospace",
+   "fieldtype": "Int",
+   "label": "Defence / Aerospace"
+  },
+  {
+   "fieldname": "column_break_hufg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "medical",
+   "fieldtype": "Int",
+   "label": "Medical"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "is_submittable": 0,
+ "issingle": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-26 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "UB Supplier",
+ "name": "Supplier Audit Checklist Detail",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 0,
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}

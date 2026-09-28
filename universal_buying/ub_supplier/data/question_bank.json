@@ -1,0 +1,684 @@
+{
+ "question_bank_name": "Default",
+ "is_default": 1,
+ "description": "Supplier risk analysis, evaluation and ranking questions.",
+ "questions": [
+  {
+   "category": "Risk",
+   "question_no": "SR_1",
+   "main_question": "1. Quality risks:",
+   "question": "Complex design",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_1",
+   "main_question": "1. Quality risks:",
+   "question": "Any special requirements identified in RFQ, P.O etc",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_1",
+   "main_question": "1. Quality risks:",
+   "question": "New technology product inadequate knowledge",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_1",
+   "main_question": "1. Quality risks:",
+   "question": "Assembly related problem",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_1",
+   "main_question": "1. Quality risks:",
+   "question": "Unproven supply sources may be required",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_1",
+   "main_question": "1. Quality risks:",
+   "question": "Existing supplier- poor \"Q\"performance",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_1",
+   "main_question": "1. Quality risks:",
+   "question": "Product design errors leading to difficulty in manufacturing",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_1",
+   "main_question": "1. Quality risks:",
+   "question": "Producibility of the product not meeting all quality targets",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_1",
+   "main_question": "1. Quality risks:",
+   "question": "Inspectability of the product to confirm that all customer and statutory and regulatory requirements have been met.",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_1",
+   "main_question": "1. Quality risks:",
+   "question": "Lack of clarity in customer documentation",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_2",
+   "main_question": "2. Delivery risks",
+   "question": "Component or parts becoming obsolete",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_2",
+   "main_question": "2. Delivery risks",
+   "question": "Customer Supplied Property - Test jig failure",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_2",
+   "main_question": "2. Delivery risks",
+   "question": "Excessive time for product manufacturing",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_2",
+   "main_question": "2. Delivery risks",
+   "question": "Excessive time for product testing",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_2",
+   "main_question": "2. Delivery risks",
+   "question": "Long leadtime for parts, development of custom-built parts, etc.",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_2",
+   "main_question": "2. Delivery risks",
+   "question": "Need for iterations / repetitions in custom-built part development",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_2",
+   "main_question": "2. Delivery risks",
+   "question": "Frequent ECO from customer",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_3",
+   "main_question": "3. Costs Risks",
+   "question": "Currency fluctuation beyond 10%",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_3",
+   "main_question": "3. Costs Risks",
+   "question": "Increment in freight charge on account of fuel price process etc.",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_3",
+   "main_question": "3. Costs Risks",
+   "question": "Change of parts leading to Non-moving/Slow-moving inventory",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_4",
+   "main_question": "4. Resource",
+   "question": "Failure to allocate resources on time.",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_4",
+   "main_question": "4. Resource",
+   "question": "Key equipment failure",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_4",
+   "main_question": "4. Resource",
+   "question": "Power shortages",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_5",
+   "main_question": "5. Economic Scenario",
+   "question": "No repeat orders",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_5",
+   "main_question": "5. Economic Scenario",
+   "question": "Non viable cost reduction request by the customer",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_5",
+   "main_question": "5. Economic Scenario",
+   "question": "Labour unrest",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_5",
+   "main_question": "5. Economic Scenario",
+   "question": "Political uncertainity",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_5",
+   "main_question": "5. Economic Scenario",
+   "question": "Terrorist activities",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_6",
+   "main_question": "6. Govt. regulation",
+   "question": "Sudden changes in regulatory requirements",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_7",
+   "main_question": "7. Natural calamities",
+   "question": "Earthquake",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_7",
+   "main_question": "7. Natural calamities",
+   "question": "Tempest & Floods",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_7",
+   "main_question": "7. Natural calamities",
+   "question": "Outbreak of diseases",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_7",
+   "main_question": "7. Natural calamities",
+   "question": "Fires",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_8",
+   "main_question": "8. Supply Chain Security Risks",
+   "question": "IT security Risk",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_8",
+   "main_question": "8. Supply Chain Security Risks",
+   "question": "Personnel Security",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_8",
+   "main_question": "8. Supply Chain Security Risks",
+   "question": "Cargo Security",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_8",
+   "main_question": "8. Supply Chain Security Risks",
+   "question": "Asset Security",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_9",
+   "main_question": "9. Others",
+   "question": "Is supplier Willing to hold stock on behalf of us",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_9",
+   "main_question": "9. Others",
+   "question": "Do the Supplier have prior relationship with us",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_9",
+   "main_question": "9. Others",
+   "question": "Do the Supplier have relationship with any of our customers.",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_9",
+   "main_question": "9. Others",
+   "question": "Do the Supplier have technical capability & process to supply the part",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_9",
+   "main_question": "9. Others",
+   "question": "Overall attitude to do business with us",
+   "weightage": 0
+  },
+  {
+   "category": "Risk",
+   "question_no": "SR_9",
+   "main_question": "9. Others",
+   "question": "Do the supplier has got a Quality and Delivery performance tracking",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_1",
+   "main_question": "1. Supplier Group",
+   "question": "Standard Part",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_1",
+   "main_question": "1. Supplier Group",
+   "question": "Custom Built",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_1",
+   "main_question": "1. Supplier Group",
+   "question": "Capital Equipments",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_1",
+   "main_question": "1. Supplier Group",
+   "question": "TJF",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_1",
+   "main_question": "1. Supplier Group",
+   "question": "Calibration",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_1",
+   "main_question": "1. Supplier Group",
+   "question": "Contractor",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_1",
+   "main_question": "1. Supplier Group",
+   "question": "Transporter / Courier",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_1",
+   "main_question": "1. Supplier Group",
+   "question": "Consumables / Stationaries",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_1",
+   "main_question": "1. Supplier Group",
+   "question": "Waste Disposal",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_1",
+   "main_question": "1. Supplier Group",
+   "question": "Service",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_1",
+   "main_question": "1. Supplier Group",
+   "question": "If Supplier Type is Standard Part, Please tick the below relevant",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_1",
+   "main_question": "1. Supplier Group",
+   "question": "OCM (Original Component Manufacturer)",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_1",
+   "main_question": "1. Supplier Group",
+   "question": "Authorized Supplier",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_1",
+   "main_question": "1. Supplier Group",
+   "question": "Franchised Distributor",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_1",
+   "main_question": "1. Supplier Group",
+   "question": "Independent Distributor / Broker Distributor / Stocking Distributor / Trader",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_2",
+   "main_question": "2. Facility and Resources",
+   "question": "Land Area",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_2",
+   "main_question": "2. Facility and Resources",
+   "question": "Built up Area",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_2",
+   "main_question": "2. Facility and Resources",
+   "question": "Land & Building Owned / Rented",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_2",
+   "main_question": "2. Facility and Resources",
+   "question": "Sanctioned/ Installed Power",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_2",
+   "main_question": "2. Facility and Resources",
+   "question": "Please provide details of your IT infrastructure available in the company",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_2",
+   "main_question": "2. Facility and Resources",
+   "question": "Provide details of human resources (Head Count)",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_2",
+   "main_question": "2. Facility and Resources",
+   "question": "Please provide details of manufacturing capabilities and IMTE (If Applicable)",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_2",
+   "main_question": "2. Facility and Resources",
+   "question": "Overall capacity, Existing capacity, curret capacity utilisation ,Additional Capacity requirement for the new product or project",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_3",
+   "main_question": "3. Financial Status",
+   "question": "Please provide details of annual turnover for past 3 years",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_3",
+   "main_question": "3. Financial Status",
+   "question": "Payment Terms",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_3",
+   "main_question": "3. Financial Status",
+   "question": "Billing Currency",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_3",
+   "main_question": "3. Financial Status",
+   "question": "Bank details to which payment should be sent",
+   "weightage": 0
+  },
+  {
+   "category": "Evaluation",
+   "question_no": "SE_3",
+   "main_question": "3. Financial Status",
+   "question": "Maximum value of supply which you can make in one lot",
+   "weightage": 0
+  },
+  {
+   "category": "Ranking",
+   "question_no": "RANK",
+   "main_question": "Evaluation Ranking",
+   "question": "Reputation of Supplier",
+   "weightage": 0,
+   "option_5": "Excellent",
+   "option_4": "V.Good",
+   "option_3": "Good",
+   "option_2": "Fair",
+   "option_1": "Poor"
+  },
+  {
+   "category": "Ranking",
+   "question_no": "RANK",
+   "main_question": "Evaluation Ranking",
+   "question": "QMS Certification status",
+   "weightage": 0,
+   "option_5": "Certified Valid Certificate",
+   "option_4": "Certificate Expired",
+   "option_3": "Under Process",
+   "option_2": "No Plan But QMS Available",
+   "option_1": "No Plan No QMS"
+  },
+  {
+   "category": "Ranking",
+   "question_no": "RANK",
+   "main_question": "Evaluation Ranking",
+   "question": "Proximity (No. of days from date of shipment to arrival date at our site)",
+   "weightage": 0,
+   "option_5": "3 Days",
+   "option_4": "",
+   "option_3": "4 to 10 Days",
+   "option_2": "",
+   "option_1": "More than 10 Days"
+  },
+  {
+   "category": "Ranking",
+   "question_no": "RANK",
+   "main_question": "Evaluation Ranking",
+   "question": "Willingness to accomodate urgent requirements",
+   "weightage": 0,
+   "option_5": "Excellent",
+   "option_4": "V.Good",
+   "option_3": "Good",
+   "option_2": "Fair",
+   "option_1": "Poor"
+  },
+  {
+   "category": "Ranking",
+   "question_no": "RANK",
+   "main_question": "Evaluation Ranking",
+   "question": "Lead time ( in weeks from the date of placement of order till date of shipment)",
+   "weightage": 0,
+   "option_5": "1-2 Weeks",
+   "option_4": "2-3 Weeks",
+   "option_3": "3-4 Weeks",
+   "option_2": "4-6 Weeks",
+   "option_1": "Above 6 Weeks"
+  },
+  {
+   "category": "Ranking",
+   "question_no": "RANK",
+   "main_question": "Evaluation Ranking",
+   "question": "Credit period offered (days)",
+   "weightage": 0,
+   "option_5": "90- Days",
+   "option_4": "60 - Days",
+   "option_3": "45 - Days",
+   "option_2": "30 - Days",
+   "option_1": "Less Than 30 Days / Advance"
+  },
+  {
+   "category": "Ranking",
+   "question_no": "RANK",
+   "main_question": "Evaluation Ranking",
+   "question": "Is supplier Willing to hold stock on behalf of us",
+   "weightage": 0,
+   "option_5": "All Parts",
+   "option_4": "Approved Line card",
+   "option_3": "Some Parts",
+   "option_2": "Cost Incurred",
+   "option_1": "No"
+  },
+  {
+   "category": "Ranking",
+   "question_no": "RANK",
+   "main_question": "Evaluation Ranking",
+   "question": "Is Supplier Willing to give free replacement in case of IQC / line rejection",
+   "weightage": 0,
+   "option_5": "Yes, willing",
+   "option_4": "Willing with few conditions",
+   "option_3": "Willing but conditional",
+   "option_2": "Very Reluctant",
+   "option_1": "Not willing"
+  },
+  {
+   "category": "Ranking",
+   "question_no": "RANK",
+   "main_question": "Evaluation Ranking",
+   "question": "In case parts are required to be tested before supply to us Does the supplier have facility to carry out such test?",
+   "weightage": 0,
+   "option_5": "Fully Equiped Testing Facility",
+   "option_4": "Good Testing Facility",
+   "option_3": "Basic Testing Facility",
+   "option_2": "Limited Testing Capability",
+   "option_1": "No Testing Facility Available"
+  },
+  {
+   "category": "Ranking",
+   "question_no": "RANK",
+   "main_question": "Evaluation Ranking",
+   "question": "Is supplier willing to give manufacturer test certificates to the part",
+   "weightage": 0,
+   "option_5": "Yes, willing",
+   "option_4": "Willing with few conditions",
+   "option_3": "Willing but conditional",
+   "option_2": "Very Reluctant",
+   "option_1": "Not willing"
+  },
+  {
+   "category": "Ranking",
+   "question_no": "RANK",
+   "main_question": "Evaluation Ranking",
+   "question": "Do the Supplier have prior relationship with us",
+   "weightage": 0,
+   "option_5": "Long-term Trusted Relationship",
+   "option_4": "Established Relationship",
+   "option_3": "Occasional Past Relationship",
+   "option_2": "Minimal Interaction",
+   "option_1": "No Prior Relationship"
+  },
+  {
+   "category": "Ranking",
+   "question_no": "RANK",
+   "main_question": "Evaluation Ranking",
+   "question": "Do the Supplier have relationship with any of our customers.",
+   "weightage": 0,
+   "option_5": "Strong Long-term Relationship",
+   "option_4": "Established Relationship",
+   "option_3": "Occasional or Ad Hoc Relationship",
+   "option_2": "Minimal or Indirect Relationship",
+   "option_1": "No Relationship"
+  },
+  {
+   "category": "Ranking",
+   "question_no": "RANK",
+   "main_question": "Evaluation Ranking",
+   "question": "Do the Supplier have technical capability & process to supply the part",
+   "weightage": 0,
+   "option_5": "Advanced Capability",
+   "option_4": "Adequate Capability",
+   "option_3": "Basic Capability",
+   "option_2": "Limited Capability",
+   "option_1": "No Capability"
+  },
+  {
+   "category": "Ranking",
+   "question_no": "RANK",
+   "main_question": "Evaluation Ranking",
+   "question": "Overall attitude to do business with us",
+   "weightage": 0,
+   "option_5": "Excellent",
+   "option_4": "V.Good",
+   "option_3": "Good",
+   "option_2": "Fair",
+   "option_1": "Poor"
+  },
+  {
+   "category": "Ranking",
+   "question_no": "RANK",
+   "main_question": "Evaluation Ranking",
+   "question": "Do the supplier has got a Quality and Delivery performance tracking",
+   "weightage": 0,
+   "option_5": "Excellent",
+   "option_4": "V.Good",
+   "option_3": "Good",
+   "option_2": "Fair",
+   "option_1": "Poor"
+  }
+ ]
+}

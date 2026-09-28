@@ -1,0 +1,290 @@
+{% extends "templates/web.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block style %}
+<style>
+	.ub-onb { max-width: 880px; margin: 24px auto 64px; }
+	.ub-onb .ub-card { background: var(--card-bg, #fff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 10px; padding: 22px 26px; margin-bottom: 20px; }
+	.ub-onb .ub-card h4 { font-size: 15px; font-weight: 600; margin: 0 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border-color, #e2e8f0); }
+	.ub-onb .ub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 22px; }
+	.ub-onb .ub-grid.one { grid-template-columns: 1fr; }
+	@media (max-width: 640px) { .ub-onb .ub-grid { grid-template-columns: 1fr; } }
+	.ub-onb label { font-size: 12px; font-weight: 600; color: var(--text-muted, #6b7280); margin-bottom: 4px; display: block; }
+	.ub-onb .req { color: #e53e3e; }
+	.ub-onb .hint { font-size: 11px; color: var(--text-muted, #6b7280); margin-top: 3px; }
+	.ub-onb input[readonly] { background: var(--control-bg, #f7fafc); }
+	.ub-onb .ub-upload-status { font-size: 11px; margin-top: 3px; }
+</style>
+{% endblock %}
+
+{% block page_content %}
+<div class="ub-onb">
+	<h2>{{ _("Supplier Registration") }}</h2>
+
+	{% if invalid %}
+	<div class="alert alert-danger">
+		<h5>{{ _("Link invalid or expired") }}</h5>
+		<p class="mb-0">{{ _("This onboarding link is no longer valid. Please contact our procurement team for a new link.") }}</p>
+	</div>
+
+	{% elif already_approved %}
+	<div class="alert alert-success">
+		<h5>{{ _("Registration complete") }}</h5>
+		<p class="mb-0">{{ _("Supplier {0} is already registered with us. No further action is needed.").format(supplier_name) }}</p>
+	</div>
+
+	{% elif submitted %}
+	<div class="alert alert-info">
+		<h5>{{ _("Form submitted") }}</h5>
+		<p class="mb-0">{{ _("Thank you. The registration for {0} is under review by our procurement team.").format(so.supplier_name) }}</p>
+	</div>
+
+	{% else %}
+	<div class="alert alert-warning">
+		{{ _("Welcome, {0}. Please complete this form so we can register you as a supplier. Fields marked * are required.").format(so.supplier_name) }}
+	</div>
+
+	<div id="ub-success" class="alert alert-success" style="display:none;">
+		<h5>{{ _("Form submitted") }}</h5>
+		<p class="mb-0">{{ _("Thank you. Our procurement team will review your details and contact you.") }}</p>
+	</div>
+
+	<form id="ub-onboarding-form" autocomplete="off">
+		<div class="ub-card">
+			<h4>{{ _("Company Information") }}</h4>
+			<div class="ub-grid">
+				<div><label>{{ _("Supplier Name") }}</label><input class="form-control" value="{{ so.supplier_name }}" readonly></div>
+				<div><label>{{ _("Supplier Type") }}</label>
+					<select class="form-control" name="supplier_type">
+						{% for opt in ["Company", "Individual", "Partnership"] %}
+						<option value="{{ opt }}" {% if so.supplier_type == opt %}selected{% endif %}>{{ _(opt) }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div><label>{{ _("Supplier Group") }} <span class="req">*</span></label>
+					<select class="form-control" name="supplier_group" required>
+						<option value="">{{ _("Select") }}</option>
+						{% for g in supplier_groups %}
+						<option value="{{ g }}" {% if so.supplier_group == g %}selected{% endif %}>{{ g }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div><label>{{ _("Country") }} <span class="req">*</span></label>
+					<input class="form-control" name="country" list="ub-countries" value="{{ so.country or '' }}" required>
+					<datalist id="ub-countries">{% for c in countries %}<option value="{{ c }}">{% endfor %}</datalist>
+				</div>
+				<div><label>{{ _("GST Category") }}</label>
+					<select class="form-control" name="gst_category">
+						{% for opt in gst_categories %}
+						<option value="{{ opt }}" {% if so.gst_category == opt %}selected{% endif %}>{{ opt }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div><label>{{ _("GSTIN") }}</label>
+					<input class="form-control text-uppercase" name="gstin" value="{{ so.gstin or '' }}" maxlength="15" placeholder="29ABCDE1234F1Z5">
+				</div>
+				<div><label>{{ _("PAN") }}</label>
+					<input class="form-control text-uppercase" name="pan" value="{{ so.pan or '' }}" maxlength="10" placeholder="ABCDE1234F">
+					<div class="hint">{{ _("Required for Indian suppliers. Format AAAAA9999A.") }}</div>
+				</div>
+				<div><label>{{ _("Website") }}</label><input class="form-control" name="website" value="{{ so.website or '' }}"></div>
+				<div><label>{{ _("Billing Currency") }}</label>
+					<select class="form-control" name="default_currency">
+						<option value=""></option>
+						{% for c in currencies %}<option value="{{ c }}" {% if so.default_currency == c %}selected{% endif %}>{{ c }}</option>{% endfor %}
+					</select>
+				</div>
+				{% if incoterms %}
+				<div><label>{{ _("Incoterms") }}</label>
+					<select class="form-control" name="incoterm">
+						<option value=""></option>
+						{% for c in incoterms %}<option value="{{ c }}" {% if so.incoterm == c %}selected{% endif %}>{{ c }}</option>{% endfor %}
+					</select>
+				</div>
+				{% endif %}
+			</div>
+		</div>
+
+		<div class="ub-card">
+			<h4>{{ _("MSME") }}</h4>
+			<div class="ub-grid">
+				<div><label><input type="checkbox" name="msme" {% if so.msme %}checked{% endif %}> {{ _("MSME Registered") }}</label></div>
+				<div><label>{{ _("MSME Category") }}</label>
+					<select class="form-control" name="msme_category">
+						{% for opt in ["", "Micro", "Small", "Medium"] %}<option value="{{ opt }}" {% if so.msme_category == opt %}selected{% endif %}>{{ opt }}</option>{% endfor %}
+					</select>
+				</div>
+				<div><label>{{ _("Udyam Registration No") }}</label><input class="form-control" name="msme_registration_no" value="{{ so.msme_registration_no or '' }}"></div>
+				<div><label>{{ _("MSME Certificate Expiry") }}</label><input type="date" class="form-control" name="msme_expiry" value="{{ so.msme_expiry or '' }}"></div>
+			</div>
+		</div>
+
+		<div class="ub-card">
+			<h4>{{ _("Primary Contact") }}</h4>
+			<div class="ub-grid">
+				<div><label>{{ _("Contact Person") }} <span class="req">*</span></label><input class="form-control" name="contact_person" value="{{ so.contact_person or '' }}" required></div>
+				<div><label>{{ _("Designation") }}</label><input class="form-control" name="designation" value="{{ so.designation or '' }}"></div>
+				<div><label>{{ _("Email") }} <span class="req">*</span></label><input type="email" class="form-control" name="email" value="{{ so.email or '' }}" required>
+					<div class="hint">{{ _("This email becomes your supplier portal login.") }}</div></div>
+				<div><label>{{ _("Phone") }}</label><input class="form-control" name="phone" value="{{ so.phone or '' }}"></div>
+				<div><label>{{ _("Mobile") }}</label><input class="form-control" name="mobile" value="{{ so.mobile or '' }}"></div>
+			</div>
+			<h4 class="mt-4">{{ _("Escalation Contact") }}</h4>
+			<div class="ub-grid">
+				<div><label>{{ _("Name") }}</label><input class="form-control" name="escalation_contact_person" value="{{ so.escalation_contact_person or '' }}"></div>
+				<div><label>{{ _("Designation") }}</label><input class="form-control" name="escalation_designation" value="{{ so.escalation_designation or '' }}"></div>
+				<div><label>{{ _("Email") }}</label><input type="email" class="form-control" name="escalation_email" value="{{ so.escalation_email or '' }}"></div>
+				<div><label>{{ _("Phone") }}</label><input class="form-control" name="escalation_phone" value="{{ so.escalation_phone or '' }}"></div>
+			</div>
+		</div>
+
+		<div class="ub-card">
+			<h4>{{ _("Address") }}</h4>
+			<div class="ub-grid">
+				<div><label>{{ _("Address Line 1") }} <span class="req">*</span></label><input class="form-control" name="address_line1" value="{{ so.address_line1 or '' }}" required></div>
+				<div><label>{{ _("Address Line 2") }}</label><input class="form-control" name="address_line2" value="{{ so.address_line2 or '' }}"></div>
+				<div><label>{{ _("City") }} <span class="req">*</span></label><input class="form-control" name="city" value="{{ so.city or '' }}" required></div>
+				<div><label>{{ _("State") }}</label><input class="form-control" name="state" value="{{ so.state or '' }}"></div>
+				<div><label>{{ _("Postal Code") }}</label><input class="form-control" name="pincode" value="{{ so.pincode or '' }}"></div>
+			</div>
+		</div>
+
+		<div class="ub-card">
+			<h4>{{ _("Bank Details") }}</h4>
+			<div class="ub-grid">
+				<div><label>{{ _("Bank Name") }} <span class="req">*</span></label><input class="form-control" name="bank_name" value="{{ so.bank_name or '' }}" required></div>
+				<div><label>{{ _("Account Holder Name") }}</label><input class="form-control" name="account_holder_name" value="{{ so.account_holder_name or '' }}"></div>
+				<div><label>{{ _("Account Number") }} <span class="req">*</span></label><input class="form-control" name="bank_account_no" value="{{ so.bank_account_no or '' }}" required></div>
+				<div><label>{{ _("IFSC / Branch Code") }}</label><input class="form-control text-uppercase" name="ifsc_code" value="{{ so.ifsc_code or '' }}"></div>
+				<div><label>{{ _("Bank Branch") }}</label><input class="form-control" name="bank_branch" value="{{ so.bank_branch or '' }}"></div>
+				<div><label>{{ _("IBAN") }}</label><input class="form-control" name="iban" value="{{ so.iban or '' }}"></div>
+				<div><label>{{ _("SWIFT Code") }}</label><input class="form-control" name="swift_code" value="{{ so.swift_code or '' }}"></div>
+			</div>
+		</div>
+
+		<div class="ub-card">
+			<h4>{{ _("Documents") }}</h4>
+			<div class="ub-grid">
+				{% for fieldname, label in upload_fields.items() %}
+				<div>
+					<label>{{ _(label) }}</label>
+					<input type="file" class="form-control ub-upload" data-fieldname="{{ fieldname }}" accept=".pdf,.jpg,.jpeg,.png">
+					<div class="ub-upload-status" data-status-for="{{ fieldname }}">{% if so.get(fieldname) %}{{ _("Uploaded") }}{% endif %}</div>
+				</div>
+				{% endfor %}
+			</div>
+			<div class="hint">{{ _("PDF, JPG or PNG, up to 5 MB each.") }}</div>
+		</div>
+
+		<div class="ub-card">
+			<h4>{{ _("Additional Information") }}</h4>
+			<div class="ub-grid one">
+				<textarea class="form-control" name="supplier_notes" rows="3">{{ so.supplier_notes or '' }}</textarea>
+			</div>
+		</div>
+
+		<div id="ub-error" class="alert alert-danger" style="display:none;"></div>
+		<button type="submit" class="btn btn-primary btn-lg btn-block" id="ub-submit">{{ _("Submit Registration") }}</button>
+	</form>
+	{% endif %}
+</div>
+{% endblock %}
+
+{% block script %}
+{% if so and not submitted and not invalid and not already_approved %}
+<script>
+frappe.ready(() => {
+	const TOKEN = {{ (token or "") | tojson }};
+	const form = document.getElementById("ub-onboarding-form");
+	if (!form) return;
+	const err = document.getElementById("ub-error");
+
+	const show_error = (msg) => {
+		err.textContent = msg;
+		err.style.display = "block";
+		err.scrollIntoView({ behavior: "smooth", block: "center" });
+	};
+	const value = (name) => {
+		const el = form.elements[name];
+		if (!el) return "";
+		if (el.type === "checkbox") return el.checked ? 1 : 0;
+		return (el.value || "").trim();
+	};
+	const server_message = (r) => {
+		try {
+			const msgs = JSON.parse(r._server_messages || "[]");
+			return msgs.map((m) => JSON.parse(m).message).join("\n").replace(/<[^>]+>/g, "");
+		} catch (e) {
+			return "";
+		}
+	};
+
+	form.querySelectorAll(".ub-upload").forEach((input) => {
+		input.addEventListener("change", () => {
+			const file = input.files && input.files[0];
+			const status = form.querySelector(`[data-status-for="${input.dataset.fieldname}"]`);
+			if (!file) return;
+			if (file.size > 5 * 1024 * 1024) {
+				status.textContent = __("File is larger than 5 MB");
+				input.value = "";
+				return;
+			}
+			status.textContent = __("Uploading...");
+			const reader = new FileReader();
+			reader.onload = () => {
+				frappe.call({
+					method: "universal_buying.www.supplier_onboarding.upload_onboarding_document",
+					args: { token: TOKEN, fieldname: input.dataset.fieldname, filename: file.name, filedata: reader.result },
+					callback: () => (status.textContent = __("Uploaded")),
+					error: (r) => (status.textContent = server_message(r) || __("Upload failed")),
+				});
+			};
+			reader.readAsDataURL(file);
+		});
+	});
+
+	form.addEventListener("submit", (e) => {
+		e.preventDefault();
+		err.style.display = "none";
+		const pan = value("pan").toUpperCase();
+		const gstin = value("gstin").toUpperCase();
+		if (pan && !/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(pan)) return show_error(__("Invalid PAN. Example: ABCDE1234F"));
+		if (gstin && gstin.length !== 15) return show_error(__("GSTIN must be 15 characters."));
+		if (gstin && pan && gstin.substring(2, 12) !== pan) return show_error(__("GSTIN does not match PAN"));
+
+		const fields = [
+			"supplier_type", "supplier_group", "country", "gst_category", "website", "default_currency", "incoterm",
+			"msme", "msme_category", "msme_registration_no", "msme_expiry",
+			"contact_person", "designation", "email", "phone", "mobile",
+			"escalation_contact_person", "escalation_designation", "escalation_email", "escalation_phone",
+			"address_line1", "address_line2", "city", "state", "pincode",
+			"bank_name", "account_holder_name", "bank_account_no", "ifsc_code", "bank_branch", "iban", "swift_code",
+			"supplier_notes",
+		];
+		const data = { pan: pan, gstin: gstin };
+		fields.forEach((f) => {
+			if (form.elements[f]) data[f] = value(f);
+		});
+		if (data.ifsc_code) data.ifsc_code = data.ifsc_code.toUpperCase();
+
+		const btn = document.getElementById("ub-submit");
+		btn.disabled = true;
+		frappe.call({
+			method: "universal_buying.www.supplier_onboarding.submit_onboarding",
+			args: { token: TOKEN, data: data },
+			callback: () => {
+				form.style.display = "none";
+				document.getElementById("ub-success").style.display = "block";
+				window.scrollTo({ top: 0, behavior: "smooth" });
+			},
+			error: (r) => {
+				btn.disabled = false;
+				show_error(server_message(r) || __("Submission failed. Please check the details and try again."));
+			},
+		});
+	});
+});
+</script>
+{% endif %}
+{% endblock %}

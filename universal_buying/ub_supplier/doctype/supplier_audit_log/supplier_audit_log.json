@@ -1,0 +1,282 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "naming_series:",
+ "creation": "2026-09-26 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "supplier",
+  "supplier_name",
+  "supplier_onboarding",
+  "company",
+  "column_break_kigt",
+  "audit_type",
+  "audit_date",
+  "supplier_audit_checklist",
+  "supplier_audit_type",
+  "auditor_section",
+  "auditor",
+  "column_break_oaaa",
+  "auditor_name",
+  "questions_section",
+  "audit_rows",
+  "score_section",
+  "total_score",
+  "minimum_score",
+  "column_break_fupj",
+  "audit_score",
+  "audit_score_percent",
+  "meets_minimum",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "default": "SUP-AUD-.YYYY.-.#####",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "hidden": 0,
+   "label": "Series",
+   "no_copy": 1,
+   "options": "SUP-AUD-.YYYY.-.#####",
+   "print_hide": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Supplier",
+   "options": "Supplier"
+  },
+  {
+   "fetch_from": "supplier.supplier_name",
+   "fetch_if_empty": 1,
+   "fieldname": "supplier_name",
+   "fieldtype": "Data",
+   "label": "Supplier Name"
+  },
+  {
+   "fieldname": "supplier_onboarding",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Supplier Onboarding",
+   "options": "Supplier Onboarding"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "column_break_kigt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "New Supplier Qualification",
+   "fieldname": "audit_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Audit Type",
+   "options": "New Supplier Qualification\nSupplier Requalification",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "audit_date",
+   "fieldtype": "Date",
+   "label": "Audit Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "supplier_audit_checklist",
+   "fieldtype": "Link",
+   "label": "Audit Checklist",
+   "options": "Supplier Audit Checklist",
+   "reqd": 1
+  },
+  {
+   "fieldname": "supplier_audit_type",
+   "fieldtype": "Select",
+   "label": "Industry Type",
+   "options": "\nIndustrial\nAutomotive\nMedical\nRailways\nDefence / Aerospace",
+   "reqd": 1
+  },
+  {
+   "fieldname": "auditor_section",
+   "fieldtype": "Section Break",
+   "label": "Auditor"
+  },
+  {
+   "default": "__user",
+   "fieldname": "auditor",
+   "fieldtype": "Link",
+   "label": "Auditor",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_oaaa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "auditor.full_name",
+   "fieldname": "auditor_name",
+   "fieldtype": "Data",
+   "label": "Auditor Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "questions_section",
+   "fieldtype": "Section Break",
+   "label": "Questions"
+  },
+  {
+   "fieldname": "audit_rows",
+   "fieldtype": "Table",
+   "label": "Audit Questions",
+   "options": "Supplier Audit Log Detail"
+  },
+  {
+   "fieldname": "score_section",
+   "fieldtype": "Section Break",
+   "label": "Score"
+  },
+  {
+   "default": "0",
+   "fieldname": "total_score",
+   "fieldtype": "Int",
+   "label": "Maximum Score",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "minimum_score",
+   "fieldtype": "Int",
+   "label": "Minimum Score for Industry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_fupj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "audit_score",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Audit Score",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "audit_score_percent",
+   "fieldtype": "Percent",
+   "label": "Audit Score (%)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "meets_minimum",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Meets Minimum Score",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Supplier Audit Log",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "is_submittable": 1,
+ "issingle": 0,
+ "istable": 0,
+ "links": [],
+ "modified": "2026-09-26 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "UB Supplier",
+ "name": "Supplier Audit Log",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Purchase Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 0,
+   "cancel": 0,
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Purchase User",
+   "share": 1,
+   "submit": 0,
+   "write": 1
+  }
+ ],
+ "quick_entry": 0,
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "show_title_field_in_link": 0,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "supplier_name",
+ "track_changes": 1
+}

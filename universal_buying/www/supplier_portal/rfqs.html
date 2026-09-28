@@ -1,0 +1,49 @@
+{% extends "templates/web.html" %}
+{% block title %}{{ _("RFQs") }}{% endblock %}
+{% block page_content %}
+{% include "templates/includes/supplier_portal_styles.html" %}
+<div class="sp-shell">
+	{% include "templates/includes/supplier_portal_nav.html" %}
+	<main class="sp-main">
+		{% if not_linked %}{% include "templates/includes/supplier_portal_not_linked.html" %}{% else %}
+		<div class="sp-head"><h2>{{ _("Requests for Quotation") }}</h2>{% include "templates/includes/supplier_portal_search.html" %}</div>
+		<div class="sp-card sp-table-wrap">
+			<table class="sp-table">
+				<thead><tr><th>{{ _("RFQ") }}</th><th>{{ _("Date") }}</th><th>{{ _("Required By") }}</th><th>{{ _("Bid Deadline") }}</th><th class="num">{{ _("Items") }}</th><th>{{ _("Your Quote") }}</th><th></th></tr></thead>
+				<tbody>
+				{% for r in rfqs %}
+				<tr>
+					<td>{{ r.name }}</td>
+					<td>{{ r.date_fmt }}</td>
+					<td>{{ r.required_fmt }}</td>
+					<td>{{ r.deadline_fmt or "-" }}</td>
+					<td class="num">{{ r.item_count }}</td>
+					<td><span class="sp-pill {{ 'green' if r.quote_status == 'Received' else 'orange' }}">{{ _(r.quote_status or "Pending") }}</span></td>
+					<td>
+						{% if r.open %}
+						<button class="btn btn-primary btn-xs sp-quote" data-rfq="{{ r.name }}">{{ _("Quote") if r.quote_status != 'Received' else _("Revise Quote") }}</button>
+						{% else %}<span class="sp-muted">{{ _("Closed") }}</span>{% endif %}
+					</td>
+				</tr>
+				{% else %}
+				<tr><td colspan="7" class="sp-muted">{{ _("No requests for quotation.") }}</td></tr>
+				{% endfor %}
+				</tbody>
+			</table>
+			{% include "templates/includes/supplier_portal_pagination.html" %}
+		</div>
+		{% endif %}
+	</main>
+</div>
+{% include "templates/includes/supplier_portal_scripts.html" %}
+<script>
+	frappe.ready(() => {
+		document.querySelectorAll(".sp-quote").forEach((btn) => {
+			btn.addEventListener("click", async () => {
+				const url = await sp.call("get_rfq_quote_link", { rfq: btn.dataset.rfq });
+				if (url) window.location.href = url;
+			});
+		});
+	});
+</script>
+{% endblock %}

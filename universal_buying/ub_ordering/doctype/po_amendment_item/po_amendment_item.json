@@ -1,0 +1,174 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-09-26 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "po_item",
+  "item_code",
+  "item_name",
+  "uom",
+  "conversion_factor",
+  "received_qty",
+  "split",
+  "col_old",
+  "original_qty",
+  "original_rate",
+  "original_schedule_date",
+  "original_amount",
+  "col_new",
+  "revised_qty",
+  "revised_rate",
+  "revised_schedule_date",
+  "revised_amount",
+  "sec_just",
+  "justification"
+ ],
+ "fields": [
+  {
+   "description": "Blank for a split (new) line",
+   "fieldname": "po_item",
+   "fieldtype": "Data",
+   "label": "PO Line",
+   "read_only": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "options": "Item"
+  },
+  {
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "label": "Item Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "conversion_factor",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Conversion Factor",
+   "read_only": 1
+  },
+  {
+   "fieldname": "received_qty",
+   "fieldtype": "Float",
+   "label": "Received Qty",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "split",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Split (New Line)"
+  },
+  {
+   "fieldname": "col_old",
+   "fieldtype": "Column Break"
+  },
+  {
+   "columns": 1,
+   "fieldname": "original_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Old Qty",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "original_rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Old Rate",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "original_schedule_date",
+   "fieldtype": "Date",
+   "label": "Old Required By",
+   "read_only": 1
+  },
+  {
+   "fieldname": "original_amount",
+   "fieldtype": "Currency",
+   "label": "Old Amount",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "col_new",
+   "fieldtype": "Column Break"
+  },
+  {
+   "columns": 1,
+   "fieldname": "revised_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "New Qty"
+  },
+  {
+   "columns": 1,
+   "fieldname": "revised_rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "New Rate",
+   "options": "currency"
+  },
+  {
+   "columns": 1,
+   "fieldname": "revised_schedule_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "New Required By"
+  },
+  {
+   "fieldname": "revised_amount",
+   "fieldtype": "Currency",
+   "label": "New Amount",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sec_just",
+   "fieldtype": "Section Break"
+  },
+  {
+   "columns": 2,
+   "fieldname": "justification",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Justification"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "is_submittable": 0,
+ "issingle": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-26 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "UB Ordering",
+ "name": "PO Amendment Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 0,
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}

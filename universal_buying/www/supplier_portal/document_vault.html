@@ -1,0 +1,80 @@
+{% extends "templates/web.html" %}
+{% block title %}{{ _("Document Vault") }}{% endblock %}
+{% block page_content %}
+{% include "templates/includes/supplier_portal_styles.html" %}
+<div class="sp-shell">
+	{% include "templates/includes/supplier_portal_nav.html" %}
+	<main class="sp-main">
+	{% if not_linked %}{% include "templates/includes/supplier_portal_not_linked.html" %}
+	{% elif not vault %}<div class="sp-card sp-muted">{{ _("The document vault is not available.") }}</div>
+	{% else %}
+		<div class="sp-head">
+			<h2>{{ _("Document Vault") }}</h2>
+			{% if suppliers | length > 1 %}
+			<form method="get"><select class="form-control input-sm" name="supplier" onchange="this.form.submit()">
+				{% for s in suppliers %}<option value="{{ s }}" {{ 'selected' if s == current_supplier else '' }}>{{ supplier_names[s] }}</option>{% endfor %}
+			</select></form>
+			{% endif %}
+		</div>
+		<div class="sp-kpis">
+			<div class="sp-kpi"><div class="n">{{ vault.stats.compliance }}%</div><div class="l">{{ _("Required documents on file") }}</div></div>
+			<div class="sp-kpi"><div class="n">{{ vault.stats.on_file }}</div><div class="l">{{ _("On file") }}</div></div>
+			<div class="sp-kpi"><div class="n">{{ vault.stats.expiring }}</div><div class="l">{{ _("Expiring soon") }}</div></div>
+			<div class="sp-kpi"><div class="n">{{ vault.stats.expired }}</div><div class="l">{{ _("Expired") }}</div></div>
+		</div>
+		{% for g in vault.groups %}
+		<div class="sp-card sp-table-wrap">
+			<h4>{{ _(g.category) }}</h4>
+			<table class="sp-table"><tbody>
+			{% for d in g.rows %}
+			<tr>
+				<td>{{ d.label }}{% if d.required %} <span class="sp-muted">*</span>{% endif %}</td>
+				<td>{% if not d.is_add %}<span class="sp-pill {{ {'Uploaded': 'green', 'Expiring': 'orange', 'Expired': 'red'}.get(d.status, '') }}">{{ _(d.status) }}</span>{% endif %}</td>
+				<td>{{ d.expires_display or "" }}</td>
+				<td>{% if d.attachment %}<a href="{{ d.attachment }}" target="_blank">{{ _("View") }}</a>{% endif %}</td>
+				<td style="white-space: nowrap;">
+					{% if d.allow_custom_label and d.is_add %}<input class="form-control input-sm sp-label" placeholder="{{ _('Document name') }}" style="display: inline-block; width: 160px;">{% endif %}
+					<input type="date" class="form-control input-sm sp-exp" title="{{ _('Expires on') }}" style="display: inline-block; width: 150px;">
+					<input type="file" class="sp-file" style="display: none;">
+					<button class="btn btn-xs btn-primary sp-up" data-key="{{ d.key }}" data-row="{{ d.row_name }}">{{ _("Upload") if not d.attachment else _("Replace") }}</button>
+					{% if d.attachment %}<button class="btn btn-xs btn-default sp-del" data-key="{{ d.key }}" data-row="{{ d.row_name }}">{{ _("Delete") }}</button>{% endif %}
+				</td>
+			</tr>
+			{% endfor %}
+			</tbody></table>
+		</div>
+		{% endfor %}
+	{% endif %}
+	</main>
+</div>
+{% include "templates/includes/supplier_portal_scripts.html" %}
+{% if vault %}
+<script>
+	frappe.ready(() => {
+		const SUPPLIER = {{ current_supplier | tojson }};
+		document.querySelectorAll(".sp-up").forEach((btn) => {
+			const tr = btn.closest("tr");
+			const input = tr.querySelector(".sp-file");
+			btn.addEventListener("click", () => input.click());
+			input.addEventListener("change", async () => {
+				if (!input.files[0]) return;
+				const file_url = await sp.upload(input.files[0]);
+				const label = tr.querySelector(".sp-label");
+				await sp.call("vault_upload", {
+					supplier: SUPPLIER, doc_key: btn.dataset.key, file_url,
+					expires_on: tr.querySelector(".sp-exp").value || null,
+					custom_label: label ? label.value : null, row_name: btn.dataset.row || null,
+				});
+				window.location.reload();
+			});
+		});
+		document.querySelectorAll(".sp-del").forEach((btn) => btn.addEventListener("click", () => {
+			frappe.confirm(__("Delete this document?"), async () => {
+				await sp.call("vault_delete", { supplier: SUPPLIER, doc_key: btn.dataset.key, row_name: btn.dataset.row || null });
+				window.location.reload();
+			});
+		}));
+	});
+</script>
+{% endif %}
+{% endblock %}

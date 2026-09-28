@@ -1,0 +1,156 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-09-26 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "question_no",
+  "main_question",
+  "question",
+  "effect",
+  "severity_ranking",
+  "severity_value",
+  "probability_of_occurance",
+  "occurrence_value",
+  "prevention_control_if_any",
+  "prevention_value",
+  "risk_priority_no",
+  "mitigation_section",
+  "mitigation_plan",
+  "responsibility",
+  "column_break_mit",
+  "target_date",
+  "status"
+ ],
+ "fields": [
+  {
+   "fieldname": "question_no",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Section Code",
+   "read_only": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "main_question",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Risk Area",
+   "read_only": 1
+  },
+  {
+   "columns": 3,
+   "fieldname": "question",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Question",
+   "read_only": 1
+  },
+  {
+   "fieldname": "effect",
+   "fieldtype": "Data",
+   "label": "Effect"
+  },
+  {
+   "columns": 2,
+   "fieldname": "severity_ranking",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Severity Evaluation Criteria",
+   "options": "\nLoss of Company Reputation\nCustomer dissatisfaction\nTime and cost Overrunning of the Project\nMarginal effect on the project\nNo effect on the project"
+  },
+  {
+   "fieldname": "severity_value",
+   "fieldtype": "Int",
+   "label": "Severity Ranking",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "probability_of_occurance",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Occurrence Evaluation Criteria",
+   "options": "\nVery high chance of occurance\nHigh chance of occurance\nMedium chance of occurance\nLow chance of occurance\nVery low chance of occurance"
+  },
+  {
+   "fieldname": "occurrence_value",
+   "fieldtype": "Int",
+   "label": "Occurrence Ranking",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "prevention_control_if_any",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Prevention Evaluation Criteria",
+   "options": "\nNo control available\nGuide lines not available for design\nMinor changes in proven design\nControl available but not followed\nAlready proven parameters used in the project"
+  },
+  {
+   "fieldname": "prevention_value",
+   "fieldtype": "Int",
+   "label": "Prevention Ranking",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "risk_priority_no",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Risk Priority Number",
+   "read_only": 1
+  },
+  {
+   "description": "Required when the RPN is at or above the threshold in Buying Control Settings.",
+   "fieldname": "mitigation_section",
+   "fieldtype": "Section Break",
+   "label": "Mitigation"
+  },
+  {
+   "fieldname": "mitigation_plan",
+   "fieldtype": "Small Text",
+   "label": "Mitigation Plan"
+  },
+  {
+   "fieldname": "responsibility",
+   "fieldtype": "Link",
+   "label": "Owner",
+   "options": "User"
+  },
+  {
+   "fieldname": "column_break_mit",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "target_date",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nOpen\nCompleted\nClosed"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "is_submittable": 0,
+ "issingle": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-26 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "UB Supplier",
+ "name": "Supplier Risk Analysis",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 0,
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}

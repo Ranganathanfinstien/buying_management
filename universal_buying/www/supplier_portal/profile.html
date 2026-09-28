@@ -1,0 +1,110 @@
+{% extends "templates/web.html" %}
+{% block title %}{{ _("Profile") }}{% endblock %}
+{% block page_content %}
+{% include "templates/includes/supplier_portal_styles.html" %}
+<div class="sp-shell">
+	{% include "templates/includes/supplier_portal_nav.html" %}
+	<main class="sp-main">
+	{% if not_linked %}{% include "templates/includes/supplier_portal_not_linked.html" %}
+	{% elif unavailable or not profile %}<div class="sp-card sp-muted">{{ _("Profile changes are not available.") }}</div>
+	{% else %}
+		<div class="sp-head">
+			<h2>{{ profile.supplier_name }}</h2>
+			{% if suppliers | length > 1 %}
+			<form method="get"><select class="form-control input-sm" name="supplier" onchange="this.form.submit()">
+				{% for s in suppliers %}<option value="{{ s }}" {{ 'selected' if s == current_supplier else '' }}>{{ supplier_names[s] }}</option>{% endfor %}
+			</select></form>
+			{% endif %}
+		</div>
+		<p class="sp-muted">{{ _("Changes are sent to the buyer for approval; nothing changes until they are approved.") }}</p>
+		{% if pending and pending.name %}
+		<div class="sp-card"><h4>{{ _("Pending approval") }}: {{ pending.name }}</h4>
+			<div class="sp-muted">{{ _("{0} contact, {1} address and {2} bank changes waiting.").format(pending.contacts | length, pending.addresses | length, pending.bank_accounts | length) }}{% if pending.gstin %} GSTIN {{ pending.gstin }}{% endif %}</div>
+		</div>
+		{% endif %}
+
+		<div class="sp-card sp-table-wrap"><h4>{{ _("Contacts") }}</h4>
+			<table class="sp-table"><thead><tr><th>{{ _("Name") }}</th><th>{{ _("Designation") }}</th><th>{{ _("Email") }}</th><th>{{ _("Phone") }}</th><th></th></tr></thead><tbody>
+			{% for c in profile.contacts %}<tr><td>{{ c.first_name }} {{ c.last_name or "" }}{% if c.is_primary_contact %} <span class="sp-pill blue">{{ _("Primary") }}</span>{% endif %}</td><td>{{ c.designation or "" }}</td><td>{{ c.email_id or "" }}</td><td>{{ c.mobile_no or c.phone or "" }}</td>
+				<td><button class="btn btn-xs btn-default sp-rm" data-kind="contacts" data-key="existing_contact" data-name="{{ c.name }}">{{ _("Remove") }}</button></td></tr>
+			{% else %}<tr><td colspan="5" class="sp-muted">{{ _("No contacts.") }}</td></tr>{% endfor %}
+			</tbody></table>
+			<form id="sp-contact" class="sp-form sp-grid2">
+				<div><label>{{ _("Change existing") }}</label><select class="form-control" name="existing_contact"><option value="">{{ _("New contact") }}</option>{% for c in profile.contacts %}<option value="{{ c.name }}">{{ c.first_name }} {{ c.last_name or "" }}</option>{% endfor %}</select>
+					<label>{{ _("First Name") }} *</label><input class="form-control" name="first_name" required>
+					<label>{{ _("Last Name") }}</label><input class="form-control" name="last_name"></div>
+				<div><label>{{ _("Designation") }}</label><input class="form-control" name="designation">
+					<label>{{ _("Email") }}</label><input type="email" class="form-control" name="email">
+					<label>{{ _("Mobile") }}</label><input class="form-control" name="mobile">
+					<button class="btn btn-primary btn-sm" style="margin-top: 8px;" type="submit">{{ _("Request Change") }}</button></div>
+			</form>
+		</div>
+
+		<div class="sp-card sp-table-wrap"><h4>{{ _("Addresses") }}</h4>
+			<table class="sp-table"><tbody>
+			{% for a in profile.addresses %}<tr><td>{{ a.address_title or "" }} ({{ _(a.address_type or "") }})</td><td>{{ a.address_line1 }}, {{ a.city }}, {{ a.state or "" }} {{ a.pincode or "" }}, {{ a.country }}</td>
+				<td><button class="btn btn-xs btn-default sp-rm" data-kind="addresses" data-key="existing_address" data-name="{{ a.name }}">{{ _("Remove") }}</button></td></tr>
+			{% else %}<tr><td class="sp-muted">{{ _("No addresses.") }}</td></tr>{% endfor %}
+			</tbody></table>
+			<form id="sp-address" class="sp-form sp-grid2">
+				<div><label>{{ _("Change existing") }}</label><select class="form-control" name="existing_address"><option value="">{{ _("New address") }}</option>{% for a in profile.addresses %}<option value="{{ a.name }}">{{ a.address_title or a.name }}</option>{% endfor %}</select>
+					<label>{{ _("Type") }}</label><select class="form-control" name="address_type"><option>Billing</option><option>Shipping</option><option>Office</option><option>Plant</option><option>Warehouse</option><option>Other</option></select>
+					<label>{{ _("Address Line 1") }} *</label><input class="form-control" name="address_line1" required>
+					<label>{{ _("Address Line 2") }}</label><input class="form-control" name="address_line2"></div>
+				<div><label>{{ _("City") }} *</label><input class="form-control" name="city" required>
+					<label>{{ _("State") }}</label><input class="form-control" name="state">
+					<label>{{ _("Pincode") }}</label><input class="form-control" name="pincode">
+					<label>{{ _("Country") }} *</label><select class="form-control" name="country" required>{% for c in countries %}<option value="{{ c }}">{{ c }}</option>{% endfor %}</select>
+					<button class="btn btn-primary btn-sm" style="margin-top: 8px;" type="submit">{{ _("Request Change") }}</button></div>
+			</form>
+		</div>
+
+		<div class="sp-card sp-table-wrap"><h4>{{ _("Bank Accounts") }}</h4>
+			<table class="sp-table"><tbody>
+			{% for b in profile.bank_accounts %}<tr><td>{{ b.bank }}</td><td>{{ b.masked }}</td><td>{{ b.branch_code or b.iban or "" }}</td>
+				<td><button class="btn btn-xs btn-default sp-rm-bank" data-name="{{ b.name }}">{{ _("Remove") }}</button></td></tr>
+			{% else %}<tr><td class="sp-muted">{{ _("No bank accounts.") }}</td></tr>{% endfor %}
+			</tbody></table>
+			<form id="sp-bank" class="sp-form sp-grid2">
+				<div><label>{{ _("Bank") }} *</label><input class="form-control" name="bank" required>
+					<label>{{ _("Account Name") }}</label><input class="form-control" name="account_name"></div>
+				<div><label>{{ _("Account No") }} *</label><input class="form-control" name="bank_account_no" required>
+					<label>{{ _("IFSC / Branch Code") }}</label><input class="form-control" name="branch_code">
+					<button class="btn btn-primary btn-sm" style="margin-top: 8px;" type="submit">{{ _("Request New Account") }}</button></div>
+			</form>
+		</div>
+
+		<div class="sp-card"><h4>{{ _("Tax ID / GSTIN") }}</h4>
+			<form id="sp-gstin" class="sp-form">
+				<input class="form-control" name="gstin" value="{{ profile.gstin or '' }}">
+				<button class="btn btn-primary btn-sm" style="margin-top: 8px;" type="submit">{{ _("Request Change") }}</button>
+			</form>
+		</div>
+	{% endif %}
+	</main>
+</div>
+{% include "templates/includes/supplier_portal_scripts.html" %}
+{% if profile %}
+<script>
+	frappe.ready(() => {
+		const SUPPLIER = {{ current_supplier | tojson }};
+		const send = (changes) => sp.call("submit_profile_change", { supplier: SUPPLIER, changes: JSON.stringify(changes) })
+			.then(() => { frappe.msgprint(__("Change request sent for approval.")); setTimeout(() => window.location.reload(), 1200); });
+		const clean = (o) => { Object.keys(o).forEach((k) => { if (o[k] === "") delete o[k]; }); return o; };
+		const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener("submit", (e) => { e.preventDefault(); fn(el); }); };
+		on("sp-contact", (el) => send({ contacts: [clean(sp.form(el))] }));
+		on("sp-address", (el) => send({ addresses: [clean(sp.form(el))] }));
+		on("sp-bank", (el) => send({ bank_accounts: [Object.assign({ action: "Add" }, clean(sp.form(el)))] }));
+		on("sp-gstin", (el) => send({ gstin: sp.form(el).gstin || "" }));
+		document.querySelectorAll(".sp-rm").forEach((b) => b.addEventListener("click", () => {
+			const row = { remove: 1 }; row[b.dataset.key] = b.dataset.name;
+			const changes = {}; changes[b.dataset.kind] = [row];
+			frappe.confirm(__("Request removal?"), () => send(changes));
+		}));
+		document.querySelectorAll(".sp-rm-bank").forEach((b) => b.addEventListener("click", () => {
+			frappe.confirm(__("Request removal?"), () => send({ bank_accounts: [{ existing_bank_account: b.dataset.name, action: "Remove" }] }));
+		}));
+	});
+</script>
+{% endif %}
+{% endblock %}

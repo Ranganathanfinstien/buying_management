@@ -1,0 +1,11 @@
+<nav class="sp-nav">
+	{% for key, label, route in portal_menu %}
+	<a href="{{ route }}" class="{{ 'active' if key == active_page else '' }}">{{ _(label) }}</a>
+	{% endfor %}
+	<div class="sp-who">
+		<div><b>{{ portal_fullname }}</b></div>
+		<div>{{ portal_email }}</div>
+		{% for s in suppliers %}<div>{{ supplier_names[s] }}</div>{% endfor %}
+		<div style="margin-top: 8px;"><a href="/?cmd=web_logout" style="padding: 0;">{{ _("Log out") }}</a></div>
+	</div>
+</nav>

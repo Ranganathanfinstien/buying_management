@@ -1,0 +1,259 @@
+{% extends "templates/web.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block page_content %}
+{% include "templates/includes/supplier_portal_styles.html" %}
+<div class="sp-shell">
+	{% include "templates/includes/supplier_portal_nav.html" %}
+	<main class="sp-main">
+	{% if not_linked %}{% include "templates/includes/supplier_portal_not_linked.html" %}
+	{% elif po %}
+		<div class="sp-head">
+			<div>
+				<a class="sp-muted" href="/supplier_portal/purchase_orders">&larr; {{ _("Purchase Orders") }}</a>
+				<h2>{{ po.name }}</h2>
+			</div>
+			<div>
+				<span class="sp-pill {{ pill.get(po.ub_portal_status, '') }}">{{ _(po.ub_portal_status or "-") }}</span>
+				{% if po.ub_material_status %}<span class="sp-pill">{{ _(po.ub_material_status) }}</span>{% endif %}
+				<a class="btn btn-default btn-sm" href="{{ pdf_url }}" target="_blank">{{ _("Download PDF") }}</a>
+			</div>
+		</div>
+
+		<div class="sp-grid2">
+			<div class="sp-card">
+				<h4>{{ _("Order") }}</h4>
+				<div>{{ _("Date") }}: <b>{{ date_fmt }}</b></div>
+				<div>{{ _("Required By") }}: <b>{{ required_fmt }}</b></div>
+				<div>{{ _("Confirmed Delivery") }}: <b>{{ confirmed_fmt or "-" }}</b></div>
+				<div>{{ _("Status") }}: {{ _(po.status) }}</div>
+				<div>{{ _("Buyer") }}: {{ po.company }}</div>
+			</div>
+			<div class="sp-card"><h4>{{ _("Ship To") }}</h4><div class="sp-pre">{{ addresses.shipping or "-" }}</div></div>
+			<div class="sp-card"><h4>{{ _("Bill To") }}</h4><div class="sp-pre">{{ addresses.billing or "-" }}</div></div>
+		</div>
+
+		<div class="sp-card sp-table-wrap">
+			<h4>{{ _("Lines") }}</h4>
+			<table class="sp-table">
+				<thead><tr><th>#</th><th>{{ _("Item") }}</th><th>{{ _("MPN") }}</th><th>{{ _("Required By") }}</th><th class="num">{{ _("Qty") }}</th><th class="num">{{ _("Shipped") }}</th><th class="num">{{ _("Received") }}</th><th class="num">{{ _("Rate") }}</th><th class="num">{{ _("Amount") }}</th></tr></thead>
+				<tbody>
+				{% for l in lines %}
+				<tr>
+					<td>{{ l.idx }}</td>
+					<td><b>{{ l.item_code or "" }}</b><div class="sp-muted">{{ l.item_name }}</div></td>
+					<td>{{ l.mpn or "" }}</td>
+					<td>{{ l.required_fmt }}</td>
+					<td class="num">{{ l.qty }} {{ l.uom }}</td>
+					<td class="num">{{ l.shipped }}</td>
+					<td class="num">{{ l.received }}</td>
+					<td class="num">{{ l.rate }}</td>
+					<td class="num">{{ l.amount }}</td>
+				</tr>
+				{% endfor %}
+				{% for t in taxes %}<tr><td colspan="8" class="num sp-muted">{{ t.description }}</td><td class="num">{{ t.amount }}</td></tr>{% endfor %}
+				<tr><td colspan="8" class="num"><b>{{ _("Grand Total") }}</b></td><td class="num"><b>{{ totals.grand }}</b></td></tr>
+				</tbody>
+			</table>
+		</div>
+
+		{% if is_open %}
+		<div class="sp-grid2">
+			<div class="sp-card">
+				<h4>{{ _("Acknowledge") if not acks else _("Revise Delivery Date") }}</h4>
+				<form id="sp-ack" class="sp-form">
+					<label>{{ _("Confirmed Delivery Date") }} *</label>
+					<input type="date" class="form-control" name="confirmed_delivery_date" required>
+					<label>{{ _("Notes") }}</label>
+					<textarea class="form-control" name="notes" rows="2"></textarea>
+					<button class="btn btn-primary btn-sm" style="margin-top: 8px;" type="submit">{{ _("Acknowledge PO") if not acks else _("Update") }}</button>
+				</form>
+			</div>
+			<div class="sp-card">
+				<h4>{{ _("Material Status") }}</h4>
+				{% if accepted %}
+				<form id="sp-ms" class="sp-form">
+					<label>{{ _("Status") }} *</label>
+					<select class="form-control" name="status" required>
+						{% for s in material_statuses %}<option value="{{ s }}">{{ _(s) }}</option>{% endfor %}
+					</select>
+					<label>{{ _("Expected Dispatch Date") }}</label>
+					<input type="date" class="form-control" name="expected_dispatch_date">
+					<label>{{ _("Remarks") }} *</label>
+					<textarea class="form-control" name="remarks" rows="2" required></textarea>
+					<button class="btn btn-primary btn-sm" style="margin-top: 8px;" type="submit">{{ _("Post Status") }}</button>
+					<div class="sp-muted" style="margin-top: 6px;">{{ _("Dispatched needs an uploaded invoice and a shipment.") }}</div>
+				</form>
+				{% else %}<div class="sp-muted">{{ _("Acknowledge the PO first.") }}</div>{% endif %}
+			</div>
+		</div>
+
+		<div class="sp-card">
+			<h4>{{ _("Create Shipment") }}</h4>
+			<form id="sp-ship" class="sp-form">
+				<div class="sp-table-wrap">
+				<table class="sp-table">
+					<thead><tr><th>#</th><th>{{ _("Item") }}</th><th class="num">{{ _("Ordered") }}</th><th class="num">{{ _("Shipped Earlier") }}</th><th class="num">{{ _("Ship Now") }}</th></tr></thead>
+					<tbody>
+					{% for l in lines %}
+					<tr>
+						<td>{{ l.idx }}</td><td>{{ l.item_code or l.item_name }}</td>
+						<td class="num">{{ l.qty }}</td><td class="num">{{ l.shipped }}</td>
+						<td class="num"><input type="number" step="any" min="0" max="{{ l.remaining }}" class="form-control input-sm sp-ship-qty" data-po-item="{{ l.name }}" value="0" style="max-width: 120px; margin-left: auto;" {{ 'disabled' if not l.remaining else '' }}></td>
+					</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+				</div>
+				<div class="sp-grid2">
+					<div>
+						<label>{{ _("Shipment Date") }} *</label><input type="date" class="form-control" name="shipment_date" required>
+						<label>{{ _("Expected Arrival") }}</label><input type="date" class="form-control" name="expected_arrival_date">
+						<label>{{ _("Mode of Transport") }}</label>
+						<select class="form-control" name="mode_of_transport">
+							{% for m in ["", "Road", "Air", "Sea", "Rail", "Courier", "Hand Delivery", "Other"] %}<option value="{{ m }}">{{ _(m) }}</option>{% endfor %}
+						</select>
+					</div>
+					<div>
+						<label>{{ _("Transporter / Carrier") }}</label><input class="form-control" name="transporter">
+						<label>{{ _("LR / AWB No") }}</label><input class="form-control" name="lr_awb_no">
+						<label>{{ _("Tracking URL") }}</label><input class="form-control" name="tracking_url">
+					</div>
+					<div>
+						<label>{{ _("Vehicle No") }}</label><input class="form-control" name="vehicle_no">
+						<label>{{ _("Driver Name / Contact") }}</label><input class="form-control" name="driver_name">
+						<label>{{ _("Shipping Document") }}</label><input type="file" class="form-control" name="attachment_file">
+					</div>
+				</div>
+				<label>{{ _("Remarks") }}</label><textarea class="form-control" name="remarks" rows="2"></textarea>
+				<button class="btn btn-primary btn-sm" style="margin-top: 8px;" type="submit">{{ _("Dispatch") }}</button>
+			</form>
+		</div>
+
+		<div class="sp-grid2">
+			<div class="sp-card">
+				<h4>{{ _("Upload Invoice") }}</h4>
+				<form id="sp-inv" class="sp-form">
+					<label>{{ _("Invoice No") }} *</label><input class="form-control" name="bill_no" required>
+					<label>{{ _("Invoice Date") }}</label><input type="date" class="form-control" name="bill_date">
+					<label>{{ _("Amount") }}</label><input type="number" step="any" class="form-control" name="amount">
+					<label>{{ _("Invoice File") }} *</label><input type="file" class="form-control" name="file" required>
+					<button class="btn btn-primary btn-sm" style="margin-top: 8px;" type="submit">{{ _("Upload") }}</button>
+				</form>
+			</div>
+			<div class="sp-card">
+				<h4>{{ _("Upload QC Document") }}</h4>
+				<form id="sp-qc" class="sp-form">
+					<label>{{ _("Line") }}</label>
+					<select class="form-control" name="po_item">
+						<option value="">{{ _("Whole order") }}</option>
+						{% for l in lines %}<option value="{{ l.name }}">{{ l.idx }} - {{ l.item_code or l.item_name }}</option>{% endfor %}
+					</select>
+					<label>{{ _("Title") }}</label><input class="form-control" name="title" placeholder="{{ _('e.g. CoC, Test Certificate, FAI') }}">
+					<label>{{ _("File") }} *</label><input type="file" class="form-control" name="file" required>
+					<button class="btn btn-primary btn-sm" style="margin-top: 8px;" type="submit">{{ _("Upload") }}</button>
+				</form>
+			</div>
+		</div>
+		{% endif %}
+
+		<div class="sp-grid2">
+			<div class="sp-card sp-table-wrap">
+				<h4>{{ _("Acknowledgements") }}</h4>
+				<table class="sp-table"><tbody>
+				{% for a in acks %}<tr><td>{{ _(a.event_type) }}</td><td>{{ a.date_fmt }}</td><td class="sp-muted">{{ a.notes or "" }}</td></tr>
+				{% else %}<tr><td class="sp-muted">{{ _("Not acknowledged yet.") }}</td></tr>{% endfor %}
+				</tbody></table>
+			</div>
+			<div class="sp-card sp-table-wrap">
+				<h4>{{ _("Material Status Log") }}</h4>
+				<table class="sp-table"><tbody>
+				{% for m in material_log %}<tr><td>{{ _(m.status) }}</td><td>{{ m.date_fmt }}</td><td class="sp-muted">{{ m.remarks }}</td></tr>
+				{% else %}<tr><td class="sp-muted">{{ _("No updates yet.") }}</td></tr>{% endfor %}
+				</tbody></table>
+			</div>
+			<div class="sp-card sp-table-wrap">
+				<h4>{{ _("Shipments") }}</h4>
+				<table class="sp-table"><tbody>
+				{% for s in shipments %}<tr><td>{{ s.name }}</td><td>{{ s.date_fmt }}</td><td>{{ _(s.shipment_status or "") }}</td><td>{{ _(s.delivery_status or "") }}</td></tr>
+				{% else %}<tr><td class="sp-muted">{{ _("No shipments yet.") }}</td></tr>{% endfor %}
+				</tbody></table>
+			</div>
+			<div class="sp-card sp-table-wrap">
+				<h4>{{ _("Uploaded Documents") }}</h4>
+				<table class="sp-table"><tbody>
+				{% for i in invoices %}<tr><td>{{ _("Invoice") }} {{ i.bill_no }}</td><td>{{ i.date_fmt }}</td><td><a href="{{ i.attachment }}" target="_blank">{{ _("View") }}</a></td></tr>{% endfor %}
+				{% for f in qc_files %}<tr><td>{{ f.title }}</td><td>{{ f.item_code or "" }}</td><td><a href="{{ f.attachment }}" target="_blank">{{ _("View") }}</a></td></tr>{% endfor %}
+				{% if not invoices and not qc_files %}<tr><td class="sp-muted">{{ _("Nothing uploaded yet.") }}</td></tr>{% endif %}
+				</tbody></table>
+			</div>
+		</div>
+	{% else %}
+		<div class="sp-head">
+			<h2>{{ _("Purchase Orders") }}</h2>
+			<div class="sp-search">
+				<a class="btn btn-sm {{ 'btn-primary' if not view else 'btn-default' }}" href="/supplier_portal/purchase_orders">{{ _("All") }}</a>
+				<a class="btn btn-sm {{ 'btn-primary' if view == 'pending' else 'btn-default' }}" href="/supplier_portal/purchase_orders?view=pending">{{ _("To Acknowledge") }}</a>
+				<a class="btn btn-sm {{ 'btn-primary' if view == 'open' else 'btn-default' }}" href="/supplier_portal/purchase_orders?view=open">{{ _("Open") }}</a>
+				{% include "templates/includes/supplier_portal_search.html" %}
+			</div>
+		</div>
+		<div class="sp-card sp-table-wrap">
+			<table class="sp-table">
+				<thead><tr><th>{{ _("Purchase Order") }}</th><th>{{ _("Date") }}</th><th>{{ _("Required By") }}</th><th>{{ _("Confirmed") }}</th><th>{{ _("Portal Status") }}</th><th>{{ _("Material") }}</th><th class="num">{{ _("% Received") }}</th><th class="num">{{ _("Total") }}</th></tr></thead>
+				<tbody>
+				{% for o in orders %}
+				<tr>
+					<td><a href="/supplier_portal/purchase_orders?name={{ o.name | urlencode }}">{{ o.name }}</a></td>
+					<td>{{ o.date_fmt }}</td><td>{{ o.required_fmt }}</td><td>{{ o.confirmed_fmt or "-" }}</td>
+					<td><span class="sp-pill {{ pill.get(o.ub_portal_status, '') }}">{{ _(o.ub_portal_status or "-") }}</span></td>
+					<td>{{ _(o.ub_material_status or "") }}</td>
+					<td class="num">{{ (o.per_received or 0) | round | int }}%</td>
+					<td class="num">{{ o.total_fmt }}</td>
+				</tr>
+				{% else %}
+				<tr><td colspan="8" class="sp-muted">{{ _("No purchase orders.") }}</td></tr>
+				{% endfor %}
+				</tbody>
+			</table>
+			{% include "templates/includes/supplier_portal_pagination.html" %}
+		</div>
+	{% endif %}
+	</main>
+</div>
+{% include "templates/includes/supplier_portal_scripts.html" %}
+{% if po %}
+<script>
+	frappe.ready(() => {
+		const PO = {{ po.name | tojson }};
+		const reload = () => window.location.reload();
+		const bind = (id, fn) => {
+			const el = document.getElementById(id);
+			if (el) el.addEventListener("submit", async (e) => { e.preventDefault(); try { await fn(el); reload(); } catch (err) { /* message shown */ } });
+		};
+		bind("sp-ack", (el) => sp.call("acknowledge_po", Object.assign({ po_id: PO }, sp.form(el))));
+		bind("sp-ms", (el) => sp.call("update_material_status", Object.assign({ po_id: PO }, sp.form(el))));
+		bind("sp-ship", async (el) => {
+			const data = sp.form(el);
+			data.purchase_order = PO;
+			data.items = [...el.querySelectorAll(".sp-ship-qty")]
+				.map((i) => ({ po_item: i.dataset.poItem, shipped_qty: parseFloat(i.value || 0) }))
+				.filter((i) => i.shipped_qty > 0);
+			const f = el.querySelector("[name=attachment_file]").files[0];
+			if (f) data.attachment = await sp.upload(f);
+			delete data.attachment_file;
+			return sp.call("create_shipment", { payload: JSON.stringify(data) });
+		});
+		bind("sp-inv", async (el) => {
+			const data = sp.form(el);
+			const file_url = await sp.upload(el.querySelector("[name=file]").files[0]);
+			return sp.call("upload_invoice", { purchase_order: PO, file_url, bill_no: data.bill_no, bill_date: data.bill_date, amount: data.amount });
+		});
+		bind("sp-qc", async (el) => {
+			const data = sp.form(el);
+			const file_url = await sp.upload(el.querySelector("[name=file]").files[0]);
+			return sp.call("add_qc_attachment", { purchase_order: PO, file_url, title: data.title, po_item: data.po_item });
+		});
+	});
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "templates/web.html" %}
+{% block title %}{{ _("Quotations") }}{% endblock %}
+{% block page_content %}
+{% include "templates/includes/supplier_portal_styles.html" %}
+<div class="sp-shell">
+	{% include "templates/includes/supplier_portal_nav.html" %}
+	<main class="sp-main">
+		{% if not_linked %}{% include "templates/includes/supplier_portal_not_linked.html" %}{% else %}
+		<div class="sp-head"><h2>{{ _("My Quotations") }}</h2>{% include "templates/includes/supplier_portal_search.html" %}</div>
+		<div class="sp-card sp-table-wrap">
+			<table class="sp-table">
+				<thead><tr><th>{{ _("Quotation") }}</th><th>{{ _("RFQ") }}</th><th>{{ _("Date") }}</th><th>{{ _("Valid Till") }}</th><th>{{ _("Status") }}</th><th class="num">{{ _("Total") }}</th></tr></thead>
+				<tbody>
+				{% for r in quotations %}
+				<tr>
+					<td>{{ r.name }}{% if r.ub_revised %} <span class="sp-pill">{{ _("Revised") }}</span>{% endif %}</td>
+					<td>{{ r.rfqs or "-" }}</td>
+					<td>{{ r.date_fmt }}</td>
+					<td>{{ r.valid_fmt or "-" }}</td>
+					<td>{{ _(r.status or "") }}</td>
+					<td class="num">{{ r.total_fmt }}</td>
+				</tr>
+				{% else %}
+				<tr><td colspan="6" class="sp-muted">{{ _("No quotations yet.") }}</td></tr>
+				{% endfor %}
+				</tbody>
+			</table>
+			{% include "templates/includes/supplier_portal_pagination.html" %}
+		</div>
+		{% endif %}
+	</main>
+</div>
+{% endblock %}

@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="robots" content="noindex, nofollow">
+	<title>{{ title }}</title>
+	<style>
+		* { box-sizing: border-box; margin: 0; padding: 0; }
+
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+			background: #f5f6fa;
+			color: #2d3748;
+			min-height: 100vh;
+		}
+
+		.portal-header {
+			background: #1a73e8;
+			color: #fff;
+			padding: 18px 32px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+		.portal-header h1 { font-size: 20px; font-weight: 600; }
+		.portal-header .rfq-meta { font-size: 13px; opacity: 0.85; }
+
+		.container {
+			max-width: 1180px;
+			margin: 32px auto;
+			padding: 0 16px;
+		}
+
+		.card {
+			background: #fff;
+			border-radius: 10px;
+			box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+			padding: 28px 32px;
+			margin-bottom: 20px;
+		}
+
+		.card h2 {
+			font-size: 15px;
+			font-weight: 600;
+			color: #1a73e8;
+			margin-bottom: 16px;
+			padding-bottom: 10px;
+			border-bottom: 1px solid #e8ecf0;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+		}
+
+		.info-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+			gap: 14px;
+		}
+		.info-item label {
+			font-size: 11px;
+			text-transform: uppercase;
+			color: #888;
+			letter-spacing: 0.5px;
+			display: block;
+			margin-bottom: 4px;
+		}
+		.info-item span {
+			font-size: 14px;
+			font-weight: 500;
+			color: #2d3748;
+		}
+
+		.message-box {
+			background: #f0f7ff;
+			border-left: 4px solid #1a73e8;
+			padding: 14px 18px;
+			border-radius: 4px;
+			font-size: 14px;
+			color: #444;
+			line-height: 1.6;
+		}
+
+		/* Items table */
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: 14px;
+		}
+		thead tr {
+			background: #f8f9fc;
+		}
+		th {
+			padding: 10px 12px;
+			text-align: left;
+			font-size: 12px;
+			font-weight: 600;
+			text-transform: uppercase;
+			color: #666;
+			letter-spacing: 0.4px;
+			border-bottom: 2px solid #e8ecf0;
+		}
+		th.right, td.right { text-align: right; }
+		td {
+			padding: 10px 12px;
+			border-bottom: 1px solid #f0f0f0;
+			vertical-align: middle;
+		}
+		tr:last-child td { border-bottom: none; }
+		tr:hover td { background: #fafbff; }
+
+
+		/* ── Item description: clamp long text into a scrollable box ───────── */
+		.desc-cell { min-width: 0; }
+		.desc-clamp {
+			max-height: 96px;
+			overflow-y: auto;
+			padding-right: 6px;
+			line-height: 1.5;
+		}
+		.desc-clamp::-webkit-scrollbar { width: 6px; }
+		.desc-clamp::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+		.desc-clamp::-webkit-scrollbar-track { background: transparent; }
+		.desc-more-btn {
+			margin-top: 6px;
+			background: #f0f7ff;
+			border: 1px solid #c7dbff;
+			color: #1a73e8;
+			padding: 3px 12px;
+			border-radius: 4px;
+			font-size: 11px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: background 0.15s;
+		}
+		.desc-more-btn:hover { background: #dbeafe; }
+
+		.badge {
+			display: inline-block;
+			padding: 2px 8px;
+			border-radius: 10px;
+			font-size: 11px;
+			font-weight: 600;
+		}
+
+		.rate-input, .qty-input {
+			width: 100%;
+			padding: 6px 8px;
+			border: 1px solid #d1d5db;
+			border-radius: 5px;
+			font-size: 13px;
+			text-align: right;
+			transition: border-color 0.2s;
+		}
+		.rate-input:focus, .qty-input:focus {
+			outline: none;
+			border-color: #1a73e8;
+			box-shadow: 0 0 0 3px rgba(26,115,232,0.1);
+		}
+
+		/* Line-level HSN / Tax dropdowns — pick-only (native select) */
+		.line-select {
+			width: 100%;
+			min-width: 0;
+			padding: 6px 8px;
+			border: 1px solid #d1d5db;
+			border-radius: 5px;
+			font-size: 12px;
+			font-family: inherit;
+			color: #2d3748;
+			background: #fff;
+			cursor: pointer;
+			transition: border-color 0.2s;
+		}
+		.line-select:focus {
+			outline: none;
+			border-color: #1a73e8;
+			box-shadow: 0 0 0 2px rgba(26,115,232,0.1);
+		}
+
+		/* Items table: compact padding + predictable column widths so the extra
+		   HSN/Tax columns fit without overflowing the page. */
+		#items-table { table-layout: fixed; }
+		#items-table th, #items-table td { padding: 9px 8px; }
+		#items-table tbody td { vertical-align: top; padding-top: 12px; }
+		#items-table th, #items-table td { overflow-wrap: break-word; }
+
+		/* Column widths (apply in column order) */
+		.col-idx    { width: 44px; white-space: nowrap; text-align: center; }
+		.col-qty    { width: 56px; }
+		.col-uom    { width: 64px; }
+		.col-hsn    { width: 168px; }
+		.col-tax    { width: 120px; }
+		.col-rate   { width: 92px; }
+		.col-amount { width: 116px; white-space: nowrap; }
+		/* Description takes whatever space remains. */
+
+		/* HSN/SAC searchable combobox (type-to-filter, pick-only) */
+		.hsn-combo { position: relative; width: 100%; }
+		.hsn-input { width: 100%; }
+		.combo-list {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			min-width: 320px;
+			max-width: 460px;
+			z-index: 50;
+			background: #fff;
+			border: 1px solid #d1d5db;
+			border-radius: 0 0 6px 6px;
+			max-height: 260px;
+			overflow-y: auto;
+			box-shadow: 0 6px 18px rgba(0,0,0,0.14);
+		}
+		.combo-item {
+			padding: 7px 11px;
+			font-size: 12px;
+			line-height: 1.4;
+			cursor: pointer;
+			border-bottom: 1px solid #f2f2f2;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		.combo-item:last-child { border-bottom: none; }
+		.combo-item:hover, .combo-item.active { background: #eef4ff; color: #1a73e8; }
+		.combo-empty { padding: 8px 11px; font-size: 12px; color: #999; }
+
+		.remarks-row td {
+			padding: 4px 12px 10px 12px;
+			border-bottom: 1px solid #f0f0f0;
+			background: #fafbff;
+		}
+		.remarks-row:hover td { background: #f5f7ff; }
+		.remarks-input {
+			width: 100%;
+			padding: 5px 10px;
+			border: 1px solid #e2e8f0;
+			border-radius: 4px;
+			font-size: 12px;
+			font-family: inherit;
+			color: #444;
+			background: #fff;
+			resize: none;
+			transition: border-color 0.2s;
+		}
+		.remarks-input:focus {
+			outline: none;
+			border-color: #1a73e8;
+			box-shadow: 0 0 0 2px rgba(26,115,232,0.08);
+		}
+		.remarks-label {
+			font-size: 10px;
+			text-transform: uppercase;
+			color: #aaa;
+			letter-spacing: 0.4px;
+			margin-bottom: 3px;
+		}
+
+		.amount-cell { font-weight: 500; color: #2d3748; white-space: nowrap; }
+
+		.subtotal-row td, .tax-row td {
+			font-weight: 500;
+			background: #fbfcfe;
+			font-size: 13px;
+			color: #4a5568;
+			border-top: 1px solid #eef1f6;
+		}
+		.totals-row td {
+			font-weight: 600;
+			background: #f8f9fc;
+			font-size: 14px;
+			border-top: 1px solid #e2e8f0;
+		}
+
+		textarea {
+			width: 100%;
+			min-height: 90px;
+			padding: 10px 14px;
+			border: 1px solid #d1d5db;
+			border-radius: 6px;
+			font-size: 14px;
+			font-family: inherit;
+			resize: vertical;
+		}
+		textarea:focus {
+			outline: none;
+			border-color: #1a73e8;
+			box-shadow: 0 0 0 3px rgba(26,115,232,0.1);
+		}
+
+		.submit-row {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 16px;
+			flex-wrap: wrap;
+		}
+
+		.btn-submit {
+			background: #1a73e8;
+			color: #fff;
+			border: none;
+			padding: 12px 36px;
+			border-radius: 6px;
+			font-size: 15px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: background 0.2s;
+		}
+		.btn-submit:hover { background: #1558b0; }
+		.btn-submit:disabled { background: #93b8f0; cursor: not-allowed; }
+
+		.grand-total-label {
+			font-size: 15px;
+			font-weight: 600;
+			color: #444;
+		}
+		.grand-total-value {
+			font-size: 18px;
+			font-weight: 700;
+			color: #1a73e8;
+		}
+
+		/* Error / Success states */
+		.state-card {
+			max-width: 520px;
+			margin: 80px auto;
+			background: #fff;
+			border-radius: 10px;
+			padding: 48px 40px;
+			text-align: center;
+			box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+		}
+		.state-card .icon { font-size: 48px; margin-bottom: 16px; }
+		.state-card h2 { font-size: 22px; margin-bottom: 10px; }
+		.state-card p { color: #666; font-size: 15px; line-height: 1.6; }
+		.state-card .sq-link {
+			display: inline-block;
+			margin-top: 20px;
+			color: #1a73e8;
+			font-weight: 600;
+			font-size: 15px;
+		}
+
+		.spinner {
+			display: none;
+			width: 18px; height: 18px;
+			border: 2px solid #fff;
+			border-top-color: transparent;
+			border-radius: 50%;
+			animation: spin 0.7s linear infinite;
+			vertical-align: middle;
+			margin-right: 8px;
+		}
+		@keyframes spin { to { transform: rotate(360deg); } }
+
+		/* ── Pagination ─────────────────────────────────────────────────── */
+		.pg-btn {
+			min-width: 32px;
+			height: 32px;
+			padding: 0 8px;
+			border: 1px solid #d1d5db;
+			background: #fff;
+			border-radius: 4px;
+			font-size: 13px;
+			cursor: pointer;
+			color: #444;
+			transition: all 0.15s;
+		}
+		.pg-btn:hover:not(:disabled) { background: #f0f4ff; border-color: #1a73e8; color: #1a73e8; }
+		.pg-btn.active { background: #1a73e8; color: #fff; border-color: #1a73e8; font-weight: 600; }
+		.pg-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+		.pg-ellipsis { font-size: 13px; color: #aaa; padding: 0 4px; line-height: 32px; }
+
+		.pg-size-btn {
+			padding: 4px 10px;
+			border: 1px solid #d1d5db;
+			background: #f5f6fa;
+			border-radius: 4px;
+			font-size: 12px;
+			cursor: pointer;
+			color: #444;
+			transition: all 0.15s;
+		}
+		.pg-size-btn:hover { background: #e8f0fe; border-color: #1a73e8; }
+		.pg-size-btn.active { background: #1a73e8; border-color: #1a73e8; color: #fff; font-weight: 600; }
+
+		/* Excel download / upload buttons */
+		.btn-xlsx {
+			background: #fff;
+			border: 1px solid #1a73e8;
+			color: #1a73e8;
+			padding: 11px 28px;
+			border-radius: 6px;
+			font-size: 14px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.15s;
+		}
+		.btn-xlsx:hover { background: #1a73e8; color: #fff; }
+
+		.totals-row td {
+			border-top: 2px solid #e8ecf0;
+		}
+
+		/* ── Form inputs ─────────────────────────────────────────────────── */
+		.form-input {
+			width: 100%;
+			padding: 8px 12px;
+			border: 1px solid #d1d5db;
+			border-radius: 5px;
+			font-size: 14px;
+			font-family: inherit;
+			color: #2d3748;
+			transition: border-color 0.2s;
+		}
+		.form-input:focus { outline: none; border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26,115,232,0.1); }
+		.field-label { font-size: 11px; text-transform: uppercase; color: #888; letter-spacing: 0.5px; display: block; margin-bottom: 5px; font-weight: 600; }
+
+		/* ── Toggle buttons ──────────────────────────────────────────────── */
+		.toggle-group { display: inline-flex; border: 1px solid #d1d5db; border-radius: 6px; overflow: hidden; }
+		.toggle-btn { padding: 7px 18px; border: none; background: #f5f6fa; cursor: pointer; font-size: 13px; color: #555; font-weight: 500; transition: all 0.15s; }
+		.toggle-btn + .toggle-btn { border-left: 1px solid #d1d5db; }
+		.toggle-btn.active.included { background: #e6f4ea; color: #1e7e34; font-weight: 600; }
+		.toggle-btn.active.excluded { background: #fff0f0; color: #c62828; font-weight: 600; }
+
+		/* ── Commercial terms ────────────────────────────────────────────── */
+		.comm-row { display: flex; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid #f0f0f0; flex-wrap: wrap; }
+		.comm-row:last-child { border-bottom: none; padding-bottom: 0; }
+		.comm-label { font-size: 14px; font-weight: 500; color: #2d3748; min-width: 200px; padding-top: 6px; }
+		.comm-right { flex: 1; min-width: 260px; }
+		.comm-desc { margin-top: 8px; width: 100%; padding: 6px 10px; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 13px; font-family: inherit; color: #444; resize: none; transition: border-color 0.2s; }
+		.comm-desc:focus { outline: none; border-color: #1a73e8; box-shadow: 0 0 0 2px rgba(26,115,232,0.08); }
+
+		/* ── Dynamic tables ──────────────────────────────────────────────── */
+		.dyn-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 12px; }
+		.dyn-table th { background: #f8f9fc; padding: 8px 10px; font-size: 11px; font-weight: 600; text-transform: uppercase; color: #666; letter-spacing: 0.4px; border-bottom: 2px solid #e8ecf0; text-align: left; }
+		.dyn-table td { padding: 6px 6px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+		.dyn-table tr:last-child td { border-bottom: none; }
+		.dyn-input { width: 100%; padding: 6px 10px; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 13px; font-family: inherit; color: #2d3748; background: #fff; transition: border-color 0.2s; }
+		.dyn-input:focus { outline: none; border-color: #1a73e8; box-shadow: 0 0 0 2px rgba(26,115,232,0.08); }
+		.dyn-pct { width: 80px; text-align: right; }
+		.btn-add-row { background: #f0f7ff; border: 1px dashed #1a73e8; color: #1a73e8; padding: 7px 16px; border-radius: 5px; font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+		.btn-add-row:hover { background: #dbeafe; }
+		.btn-remove-row { background: none; border: none; color: #ccc; font-size: 18px; cursor: pointer; padding: 0 4px; line-height: 1; transition: color 0.15s; }
+		.btn-remove-row:hover { color: #e53e3e; }
+			.mini-input { width: 90px; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px; text-align: right; }
+		.line-extra { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 6px; font-size: 12px; color: #666; align-items: center; }
+	</style>
+</head>
+<body>
+
+{% if error %}
+<div class="state-card">
+	<div class="icon">&#9888;&#65039;</div>
+	<h2 style="color:#e53e3e;">Invalid Link</h2>
+	<p>{{ error | e }}</p>
+</div>
+
+{% else %}
+<div class="portal-header">
+	<div>
+		<h1>Request for Quotation Portal</h1>
+		<div class="rfq-meta">{{ company }}</div>
+	</div>
+	<div class="rfq-meta" style="text-align:right;">
+		<div><strong>{{ rfq_name }}</strong></div>
+		<div>{{ transaction_date }}</div>
+		{% if bid_deadline_fmt %}<div>Bid deadline: <strong>{{ bid_deadline_fmt }}</strong></div>{% endif %}
+	</div>
+</div>
+
+<div class="container">
+
+{% if closed %}
+<div class="card" style="border-left:4px solid #d69e2e;background:#fffaf0;">
+	<h2 style="margin:0 0 4px;border:none;padding:0;color:#975a16;">Submissions closed ({{ bid_state_label }})</h2>
+	<p style="margin:0;color:#744210;font-size:13px;line-height:1.6;">{{ closed_message }}</p>
+	{% if existing_revisions %}
+	<p style="margin:8px 0 0;color:#744210;font-size:13px;">You can still view a quotation you submitted earlier below.</p>
+	{% endif %}
+</div>
+{% elif bid_state == "closing_soon" %}
+<div class="card" style="border-left:4px solid #dd6b20;background:#fffaf0;">
+	<p style="margin:0;color:#7b341e;font-size:14px;">Bidding closes on <strong>{{ bid_deadline_fmt }}</strong>. Please submit before the deadline.</p>
+</div>
+{% endif %}
+
+{% if revision_request and not closed %}
+<div class="card" style="border-left:4px solid #dd6b20;">
+	<h2 style="margin:0 0 6px;border:none;padding:0;color:#c05621;">Revision requested</h2>
+	<p style="margin:0;font-size:13px;color:#4a5568;">The buyer asked you to revise quotation <strong>{{ revision_request.name }}</strong>:
+		<em>{{ (revision_request.ub_revision_reason or "") | e }}</em></p>
+</div>
+{% endif %}
+
+{% if existing_revisions %}
+<div class="card" style="border-left:4px solid #3182ce;">
+	<h2 style="margin-bottom:12px;color:#2b6cb0;">Your previous submissions</h2>
+	<table style="width:100%;border-collapse:collapse;font-size:13px;">
+		<thead>
+			<tr style="background:#ebf8ff;text-align:left;">
+				<th style="padding:8px 12px;">Version</th>
+				<th style="padding:8px 12px;">Reference</th>
+				<th style="padding:8px 12px;">Date</th>
+				<th style="padding:8px 12px;text-align:center;">Status</th>
+				<th style="padding:8px 12px;text-align:center;">Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for rev in existing_revisions %}
+			<tr style="border-bottom:1px solid #f0f0f0;">
+				<td style="padding:8px 12px;font-weight:600;color:#2b6cb0;">Version {{ rev.ub_portal_revision or 0 }}</td>
+				<td style="padding:8px 12px;">{{ rev.name }}</td>
+				<td style="padding:8px 12px;color:#666;">{{ frappe.format(rev.creation, {"fieldtype": "Datetime"}) }}</td>
+				<td style="padding:8px 12px;text-align:center;">
+					{% if rev.ub_revised %}
+						<span style="background:#edf2f7;color:#4a5568;padding:2px 8px;border-radius:12px;font-size:11px;">Superseded</span>
+					{% elif rev.workflow_state == "Approved" %}
+						<span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:12px;font-size:11px;">Awarded</span>
+					{% elif rev.workflow_state == "Rejected" %}
+						<span style="background:#fed7d7;color:#822727;padding:2px 8px;border-radius:12px;font-size:11px;">Not awarded</span>
+					{% else %}
+						<span style="background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:12px;font-size:11px;">Under review</span>
+					{% endif %}
+				</td>
+				<td style="padding:8px 12px;text-align:center;">
+					<button type="button" onclick="initSqView('{{ rev.name }}')"
+						style="background:#3182ce;color:#fff;border:none;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:12px;font-weight:600;">View</button>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% if not closed %}
+	<p style="margin-top:12px;color:#4a5568;font-size:13px;">
+		A new submission is recorded as <strong>Version {{ next_revision }}</strong> and replaces your earlier ones.
+	</p>
+	{% endif %}
+</div>
+{% endif %}
+
+<!-- discussion with the buyer -->
+<div class="card" id="chat-card" style="border-left:4px solid #3182ce;">
+	<h2 style="margin-bottom:6px;color:#2b6cb0;">Messages with the buyer</h2>
+	<p style="margin:0 0 10px;color:#718096;font-size:12px;">Ask questions or answer the buyer about this quotation (lead time, price, terms). The buyer sees your messages next to your quotation.</p>
+	<div id="chat-box" style="height:240px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:8px;padding:10px;background:#f7fafc;">
+		<div style="color:#a0aec0;font-size:13px;text-align:center;margin-top:100px;">Loading...</div>
+	</div>
+	<textarea id="chat-input" rows="2" placeholder="Type your message" style="width:100%;margin-top:8px;border:1px solid #cbd5e0;border-radius:6px;padding:8px 10px;font-size:13px;resize:vertical;"></textarea>
+	<div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+		<span id="chat-status" style="font-size:12px;color:#718096;"></span>
+		<button type="button" id="chat-send" onclick="sendChatMessage()" style="background:#3182ce;color:#fff;border:none;padding:7px 18px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;">Send</button>
+	</div>
+</div>
+
+<!-- one-time code modal -->
+<div id="otp-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;">
+	<div style="background:#fff;border-radius:12px;padding:36px 32px;max-width:420px;width:90%;text-align:center;">
+		<h3 style="font-size:18px;font-weight:700;color:#1a202c;margin-bottom:8px;">Verify your identity</h3>
+		<p id="otp-desc" style="color:#718096;font-size:13px;margin-bottom:20px;line-height:1.6;"></p>
+		<input id="otp-input" type="text" maxlength="6" placeholder="6-digit code" inputmode="numeric"
+			style="width:100%;padding:12px;font-size:22px;letter-spacing:8px;text-align:center;border:2px solid #e2e8f0;border-radius:8px;margin-bottom:16px;"
+			oninput="this.value=this.value.replace(/\D/g,'')" onkeydown="if(event.key==='Enter') verifySqOtp()" />
+		<div style="display:flex;gap:10px;">
+			<button type="button" onclick="closeOtpModal()" style="flex:1;padding:10px;border:1px solid #e2e8f0;background:#fff;border-radius:6px;cursor:pointer;">Cancel</button>
+			<button type="button" onclick="verifySqOtp()" style="flex:2;padding:10px;background:#1a73e8;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;">Verify &amp; View</button>
+		</div>
+		<p id="otp-error" style="color:#e53e3e;font-size:13px;margin-top:10px;display:none;"></p>
+		<p style="margin-top:14px;font-size:12px;color:#a0aec0;">Did not receive it? <a href="#" onclick="resendOtp();return false;" style="color:#3182ce;">Send again</a></p>
+	</div>
+</div>
+
+<!-- quotation preview modal -->
+<div id="sq-preview-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;padding:16px;">
+	<div style="background:#fff;border-radius:12px;max-width:860px;width:100%;max-height:90vh;overflow-y:auto;">
+		<div style="background:#1a73e8;color:#fff;padding:18px 24px;border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:space-between;">
+			<div>
+				<div style="font-size:16px;font-weight:700;" id="preview-title">Quotation</div>
+				<div style="font-size:12px;opacity:0.85;" id="preview-subtitle"></div>
+			</div>
+			<button type="button" onclick="closeSqPreview()" style="background:rgba(255,255,255,0.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;">&times;</button>
+		</div>
+		<div style="padding:24px;" id="sq-preview-body"></div>
+	</div>
+</div>
+
+<!-- item detail modal -->
+<div id="item-detail-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;padding:16px;">
+	<div style="background:#fff;border-radius:12px;max-width:720px;width:100%;max-height:85vh;overflow-y:auto;">
+		<div style="background:#1a73e8;color:#fff;padding:16px 22px;border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:space-between;">
+			<div style="font-size:15px;font-weight:700;">Item details</div>
+			<button type="button" onclick="closeItemDetail()" style="background:rgba(255,255,255,0.2);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:18px;">&times;</button>
+		</div>
+		<div style="padding:22px;line-height:1.7;color:#2d3748;font-size:14px;" id="item-detail-body"></div>
+	</div>
+</div>
+
+	<div class="card">
+		<h2>Quotation request</h2>
+		<div class="info-grid">
+			<div class="info-item"><label>RFQ Number</label><span>{{ rfq_name }}</span></div>
+			<div class="info-item"><label>Date</label><span>{{ transaction_date }}</span></div>
+			<div class="info-item"><label>Company</label><span>{{ company }}</span></div>
+			<div class="info-item"><label>Addressed To</label><span>{{ supplier_name | e }}</span></div>
+			<div class="info-item"><label>Quote Currency</label><span>{{ currency }}</span></div>
+			{% if incoterm %}<div class="info-item"><label>Incoterm</label><span>{{ incoterm }}</span></div>{% endif %}
+		</div>
+		{% if message_for_supplier %}
+		<div class="message-box" style="margin-top:18px;">{{ message_for_supplier }}</div>
+		{% endif %}
+	</div>
+
+	{% if not closed %}
+	{% set ncols = 7 + (1 if hsn_enabled else 0) + (1 if tax_required else 0) %}
+	<div class="card">
+		<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #e8ecf0;">
+			<h2 style="margin:0;border:none;padding:0;">Items - enter your rates</h2>
+			<div style="display:flex;align-items:center;gap:6px;" id="items-size-group">
+				<span style="font-size:12px;color:#888;">Per page:</span>
+				<button type="button" class="pg-size-btn" onclick="itemsSetPageSize(10)">10</button>
+				<button type="button" class="pg-size-btn active" onclick="itemsSetPageSize(25)">25</button>
+				<button type="button" class="pg-size-btn" onclick="itemsSetPageSize(50)">50</button>
+				<button type="button" class="pg-size-btn" onclick="itemsSetPageSize('all')">All</button>
+			</div>
+		</div>
+
+		<table id="items-table">
+			<thead>
+				<tr>
+					<th class="col-idx">#</th>
+					<th>Description</th>
+					<th class="right col-qty">Qty</th>
+					<th class="right col-qty">Offered Qty</th>
+					<th class="col-uom">UOM</th>
+					{% if hsn_enabled %}<th class="col-hsn">HSN/SAC</th>{% endif %}
+					{% if tax_required %}<th class="col-tax">Tax</th>{% endif %}
+					<th class="right col-rate">Rate ({{ currency }})</th>
+					<th class="right col-amount">Amount</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in items %}
+				<tr data-idx="{{ item.idx }}">
+					<td class="col-idx">{{ item.idx }}</td>
+					{% set _desc_main = item.item_name or item.item_code or "" %}
+					{% set _desc_extra = item.description if (item.description and item.description != item.item_name) else "" %}
+					<td class="desc-cell">
+						<div class="desc-clamp">
+							<strong>{{ _desc_main | e }}</strong>
+							{% if item.item_code and item.item_code != _desc_main %}<div style="font-size:11px;color:#999;">{{ item.item_code | e }}</div>{% endif %}
+							{% if _desc_extra %}<div style="font-size:12px;color:#888;margin-top:2px;">{{ _desc_extra | e }}</div>{% endif %}
+							{% if item.schedule_date %}<div style="font-size:11px;color:#999;">Required by {{ item.schedule_date }}</div>{% endif %}
+						</div>
+						{% if (_desc_main | length) + (_desc_extra | length) > 140 %}
+						<button type="button" class="desc-more-btn" onclick="showItemDetail(this)">View full details</button>
+						{% endif %}
+					</td>
+					<td class="right">{{ item.qty }}</td>
+					<td class="right">
+						<input type="number" class="qty-input" data-idx="{{ item.idx }}" value="{{ item.qty }}" min="0" step="any"
+							title="Quantity you can supply. Defaults to the RFQ quantity" />
+					</td>
+					<td>{{ item.uom }}</td>
+					{% if hsn_enabled %}
+					<td>
+						<div class="hsn-combo">
+							<input type="text" class="line-select hsn-input" autocomplete="off" placeholder="Type code..."
+								data-idx="{{ item.idx }}" value="{{ item.hsn_label | e }}">
+							<input type="hidden" class="hsn-value" data-idx="{{ item.idx }}" value="{{ item.gst_hsn_code }}">
+							<div class="combo-list" style="display:none;"></div>
+						</div>
+					</td>
+					{% endif %}
+					{% if tax_required %}
+					<td><select class="line-select tax-select" data-idx="{{ item.idx }}" data-default="{{ item.item_tax_template | e }}"></select></td>
+					{% endif %}
+					<td class="right">
+						<input type="number" class="rate-input" data-idx="{{ item.idx }}" data-qty="{{ item.qty }}" value="0" min="0" step="0.01" placeholder="0.00" />
+					</td>
+					<td class="right amount-cell" id="amount-{{ item.idx }}">0.00</td>
+				</tr>
+				<tr class="remarks-row" data-idx="{{ item.idx }}">
+					<td colspan="{{ ncols }}">
+						<div class="line-extra">
+							<label>MOQ <input type="number" class="mini-input moq-input" data-idx="{{ item.idx }}" min="0" step="any"></label>
+							<label>SPQ <input type="number" class="mini-input spq-input" data-idx="{{ item.idx }}" min="0" step="any"></label>
+						</div>
+						<div class="remarks-label">Remarks (optional)</div>
+						<textarea class="remarks-input" rows="1" data-idx="{{ item.idx }}"
+							placeholder="e.g. make, availability, any conditions for this item"></textarea>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+			<tfoot>
+				<tr id="items-pagination-row" style="display:none;">
+					<td colspan="{{ ncols }}" style="padding:10px 12px 8px;border-bottom:1px solid #f0f0f0;">
+						<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+							<span id="items-page-info" style="font-size:13px;color:#888;"></span>
+							<div id="items-page-controls" style="display:flex;gap:4px;flex-wrap:wrap;"></div>
+						</div>
+					</td>
+				</tr>
+				<tr class="subtotal-row">
+					<td colspan="{{ ncols - 2 }}" class="right">Subtotal (net)</td>
+					<td colspan="2" class="right" id="subtotal-amount" style="white-space:nowrap;">0.00</td>
+				</tr>
+				<tr class="tax-row">
+					<td colspan="{{ ncols - 2 }}" class="right" id="tax-row-label">Tax</td>
+					<td colspan="2" class="right" id="tax-amount" style="white-space:nowrap;">0.00</td>
+				</tr>
+				<tr class="totals-row">
+					<td colspan="{{ ncols - 2 }}" class="right">Grand total</td>
+					<td colspan="2" class="right" id="grand-total" style="white-space:nowrap;">0.00</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+
+	<div class="card">
+		<h2>Delivery &amp; validity</h2>
+		<div class="info-grid">
+			<div>
+				<label class="field-label">Lead time (days)</label>
+				<input type="number" min="0" step="1" class="form-input" id="lead-time-days" placeholder="e.g. 30">
+			</div>
+			<div>
+				<label class="field-label">Quotation valid until</label>
+				<input type="date" class="form-input" id="valid-till">
+			</div>
+			<div>
+				<label class="field-label">Your quotation ref no. (optional)</label>
+				<input type="text" class="form-input" id="quotation-number" maxlength="140">
+			</div>
+		</div>
+	</div>
+
+	<div class="card">
+		<h2>Commercial terms</h2>
+		{% for key, label in [("freight", "Freight &amp; Insurance"), ("packing", "Packing &amp; Forwarding"), ("installation", "Installation &amp; Commissioning")] %}
+		<div class="comm-row">
+			<div class="comm-label">{{ label }}</div>
+			<div class="comm-right">
+				<div class="toggle-group">
+					<button type="button" class="toggle-btn included active" onclick="setToggle('{{ key }}','Included',this)">Included</button>
+					<button type="button" class="toggle-btn excluded" onclick="setToggle('{{ key }}','Excluded',this)">Excluded</button>
+				</div>
+				<input type="hidden" id="{{ key }}-value" value="Included">
+				<textarea class="comm-desc" id="{{ key }}-desc" rows="2" placeholder="Remarks / charges"></textarea>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+
+	<div class="card">
+		<h2>Tax</h2>
+		<div class="comm-row">
+			<div class="comm-label">Rates include tax?</div>
+			<div class="comm-right">
+				<div class="toggle-group">
+					<button type="button" class="toggle-btn included" onclick="setToggle('tax','Included',this)">Included</button>
+					<button type="button" class="toggle-btn excluded active" onclick="setToggle('tax','Excluded',this)">Excluded</button>
+				</div>
+				<input type="hidden" id="tax-value" value="Excluded">
+				<div style="color:#888;font-size:12px;padding:6px 0;">"Included" treats your rates as tax inclusive; "Excluded" adds tax on top.</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="card">
+		<h2>Payment terms</h2>
+		<table class="dyn-table">
+			<thead><tr><th>Milestone / term</th><th style="width:100px">%</th><th style="width:36px"></th></tr></thead>
+			<tbody id="pt-body">
+				<tr>
+					<td><input type="text" class="dyn-input pt-term" placeholder="e.g. Advance on order confirmation"></td>
+					<td><input type="number" class="dyn-input dyn-pct pt-pct" placeholder="30" min="0" max="100" step="0.01"></td>
+					<td><button type="button" class="btn-remove-row" onclick="removeRow(this,'pt-body')">&times;</button></td>
+				</tr>
+			</tbody>
+		</table>
+		<button type="button" class="btn-add-row" onclick="addPTRow()">+ Add row</button>
+	</div>
+
+	<div class="card">
+		<h2>Technical specification</h2>
+		<table class="dyn-table">
+			<thead><tr><th>Parameter</th><th>Value / compliance</th><th style="width:36px"></th></tr></thead>
+			<tbody id="ts-body">
+				<tr>
+					<td><input type="text" class="dyn-input ts-param" placeholder="e.g. Make / Brand"></td>
+					<td><input type="text" class="dyn-input ts-val" placeholder="e.g. Siemens"></td>
+					<td><button type="button" class="btn-remove-row" onclick="removeRow(this,'ts-body')">&times;</button></td>
+				</tr>
+			</tbody>
+		</table>
+		<button type="button" class="btn-add-row" onclick="addTSRow()">+ Add row</button>
+		<div style="margin-top:14px;">
+			<label class="field-label">Quotation document (optional, PDF)</label>
+			<input type="file" id="quotation-file" accept=".pdf,.png,.jpg,.jpeg,.xlsx,.docx">
+			<span id="attach-status" style="font-size:12px;color:#666;margin-left:8px;"></span>
+		</div>
+	</div>
+
+	{% if terms %}
+	<div class="card">
+		<h2>Buyer's terms</h2>
+		<div class="message-box">{{ terms }}</div>
+	</div>
+	{% else %}
+	<div class="card">
+		<h2>Notes / terms</h2>
+		<textarea id="notes" placeholder="Any remarks or conditions"></textarea>
+	</div>
+	{% endif %}
+
+	<div class="card">
+		<div class="submit-row">
+			<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+				<button type="button" class="btn-xlsx" onclick="downloadRfqExcel()">Download Excel</button>
+				<button type="button" class="btn-xlsx" onclick="document.getElementById('xlsx-upload-input').click()">Upload Excel</button>
+				<input type="file" id="xlsx-upload-input" accept=".xlsx" style="display:none" onchange="uploadRfqExcel(this)">
+				<span id="xlsx-status" style="font-size:12px;color:#666;"></span>
+			</div>
+			<div style="display:flex;align-items:center;gap:16px;">
+				<div>
+					<div class="grand-total-label">Grand total</div>
+					<div class="grand-total-value" id="submit-total">{{ currency }} 0.00</div>
+				</div>
+				<button type="button" class="btn-submit" id="submit-btn" onclick="submitQuotation()">
+					<span class="spinner" id="spinner"></span>
+					{% if next_revision == 0 %}Submit Quotation{% else %}Submit Version {{ next_revision }}{% endif %}
+				</button>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+
+</div>
+
+<div id="success-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;align-items:center;justify-content:center;">
+	<div class="state-card" style="margin:0;max-width:480px;">
+		<h2 style="color:#2f855a;" id="success-title">Quotation submitted</h2>
+		<p>Your quotation has been received by <strong>{{ company }}</strong>. A confirmation e-mail is on its way.</p>
+		<p id="sq-ref" style="margin-top:12px;color:#555;font-size:13px;font-weight:600;"></p>
+		<div style="margin-top:20px;display:flex;gap:12px;justify-content:center;">
+			<button type="button" onclick="location.reload()" style="padding:10px 20px;background:#3182ce;color:#fff;border:none;border-radius:6px;cursor:pointer;">Done</button>
+		</div>
+	</div>
+</div>
+
+<div id="tax-confirm-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;">
+	<div style="background:#fff;border-radius:10px;max-width:440px;width:90%;padding:26px 28px;">
+		<div style="font-size:17px;font-weight:600;color:#1a202c;margin-bottom:10px;">Confirm</div>
+		<div id="tax-confirm-msg" style="font-size:14px;color:#4a5568;line-height:1.55;margin-bottom:22px;"></div>
+		<div style="display:flex;justify-content:flex-end;gap:10px;">
+			<button type="button" id="tax-confirm-cancel" style="padding:9px 20px;border:1px solid #cbd5e0;background:#fff;border-radius:6px;cursor:pointer;">Cancel</button>
+			<button type="button" id="tax-confirm-ok" style="padding:9px 22px;border:none;background:#3182ce;color:#fff;border-radius:6px;font-weight:600;cursor:pointer;">Submit</button>
+		</div>
+	</div>
+</div>
+
+<script>
+const TOKEN = {{ token | tojson }};
+const CSRF = "{{ frappe.session.csrf_token }}";
+const API = "/api/method/universal_buying.ub_sourcing.portal.";
+const CURRENCY = {{ currency | tojson }};
+const TAX_OPTIONS = {{ tax_options_json | safe }};
+const HSN_ENABLED = {{ 1 if hsn_enabled else 0 }};
+const TAX_REQUIRED = {{ 1 if tax_required else 0 }};
+
+function escHtml(str) {
+	if (str === null || str === undefined) return "";
+	return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+function formatNum(n) {
+	return (parseFloat(n) || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function serverErrorText(data) {
+	try {
+		const msgs = JSON.parse(data._server_messages || "[]");
+		const texts = msgs.map(m => { try { return JSON.parse(m).message; } catch (e) { return m; } }).filter(Boolean);
+		if (texts.length) return texts.join("\n").replace(/<br\s*\/?>/gi, "\n").replace(/&bull;/g, "-").replace(/<[^>]+>/g, "");
+	} catch (e) { /* fall through */ }
+	return data.exception || data.exc_type || "Unknown error";
+}
+function postJson(method, body) {
+	return fetch(API + method, {
+		method: "POST",
+		headers: { "Content-Type": "application/json", "X-Frappe-CSRF-Token": CSRF },
+		body: JSON.stringify(body),
+	}).then(r => r.json());
+}
+
+// discussion with the buyer
+const CHAT_API = "/api/method/universal_buying.ub_sourcing.chat.";
+function chatCall(method, body) {
+	return fetch(CHAT_API + method, {
+		method: "POST",
+		headers: { "Content-Type": "application/json", "X-Frappe-CSRF-Token": CSRF },
+		body: JSON.stringify(body),
+	}).then(r => r.json());
+}
+function renderChatMessages(messages) {
+	const box = document.getElementById("chat-box");
+	if (!box) return;
+	const nearBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 40;
+	if (!messages || !messages.length) {
+		box.innerHTML = '<div style="color:#a0aec0;font-size:13px;text-align:center;margin-top:100px;">No messages yet. Start the conversation below.</div>';
+		return;
+	}
+	box.innerHTML = messages.map(m => {
+		const mine = m.sender_type === "Supplier";
+		return `<div style="display:flex;justify-content:${mine ? "flex-end" : "flex-start"};margin:5px 0;">
+			<div style="max-width:80%;background:${mine ? "#e0ecff" : "#ffffff"};border:1px solid #e2e8f0;border-radius:10px;padding:7px 11px;">
+				<div style="font-size:11px;color:#718096;margin-bottom:2px;">${mine ? "You" : "Buyer"} · ${escHtml(m.sender_name)} · ${escHtml(m.time)}</div>
+				<div style="white-space:pre-wrap;word-break:break-word;font-size:13px;color:#1a202c;">${escHtml(m.message)}</div>
+			</div></div>`;
+	}).join("");
+	if (nearBottom || box.dataset.loaded !== "1") box.scrollTop = box.scrollHeight;
+	box.dataset.loaded = "1";
+}
+function loadChatMessages() {
+	chatCall("portal_get_thread", { token: TOKEN }).then(data => {
+		if (data.exc || data.exc_type) return;
+		renderChatMessages(data.message || []);
+	}).catch(() => {});
+}
+function sendChatMessage() {
+	const input = document.getElementById("chat-input");
+	const status = document.getElementById("chat-status");
+	const text = (input.value || "").trim();
+	if (!text) return;
+	const btn = document.getElementById("chat-send");
+	btn.disabled = true;
+	status.textContent = "Sending...";
+	chatCall("portal_post_message", { token: TOKEN, message: text }).then(data => {
+		btn.disabled = false;
+		if (data.exc || data.exc_type) { status.textContent = serverErrorText(data); return; }
+		input.value = "";
+		status.textContent = "Sent";
+		setTimeout(() => { status.textContent = ""; }, 2000);
+		renderChatMessages(data.message || []);
+	}).catch(() => { btn.disabled = false; status.textContent = "Could not send. Please try again."; });
+}
+document.getElementById("chat-input").addEventListener("keydown", (e) => {
+	if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) sendChatMessage();
+});
+loadChatMessages();
+setInterval(loadChatMessages, 30000);
+
+// tax template dropdowns
+(function () {
+	const html = '<option value="">- Select -</option>' + TAX_OPTIONS.map(t => `<option value="${escHtml(t)}">${escHtml(t)}</option>`).join("");
+	document.querySelectorAll(".tax-select").forEach(sel => {
+		sel.innerHTML = html;
+		if (sel.dataset.default) sel.value = sel.dataset.default;
+		sel.addEventListener("change", updateGrandTotal);
+	});
+})();
+
+// one collector for the preview and the submit
+function collectItems() {
+	const map = {};
+	document.querySelectorAll(".rate-input").forEach(inp => {
+		const idx = parseInt(inp.dataset.idx);
+		map[idx] = { idx, rate: parseFloat(inp.value) || 0, remarks: "", hsn: "", item_tax_template: "" };
+	});
+	const put = (sel, key, fn) => document.querySelectorAll(sel).forEach(el => {
+		const idx = parseInt(el.dataset.idx);
+		if (map[idx]) map[idx][key] = fn(el);
+	});
+	put(".remarks-input", "remarks", el => el.value.trim());
+	put(".hsn-value", "hsn", el => el.value);
+	put(".tax-select", "item_tax_template", el => el.value);
+	put(".qty-input", "offered_qty", el => parseFloat(el.value) || 0);
+	put(".moq-input", "moq", el => parseFloat(el.value) || 0);
+	put(".spq-input", "spq", el => parseFloat(el.value) || 0);
+	return Object.values(map);
+}
+
+// HSN/SAC type-ahead (only when the GST HSN Code master exists)
+(function () {
+	if (!HSN_ENABLED) return;
+	let timer = null;
+	document.querySelectorAll(".hsn-input").forEach(input => {
+		const combo = input.closest(".hsn-combo");
+		const list = combo.querySelector(".combo-list");
+		const hidden = combo.querySelector(".hsn-value");
+		input.addEventListener("input", () => {
+			hidden.value = "";
+			clearTimeout(timer);
+			timer = setTimeout(() => search(input.value.trim(), list, input, hidden), 200);
+		});
+		input.addEventListener("focus", () => search(input.value.trim(), list, input, hidden));
+		input.addEventListener("blur", () => setTimeout(() => {
+			list.style.display = "none";
+			if (!hidden.value) input.value = "";
+		}, 180));
+	});
+	function search(txt, list, input, hidden) {
+		fetch(API + "search_hsn_codes?txt=" + encodeURIComponent(txt) + "&limit=20", { headers: { "X-Frappe-CSRF-Token": CSRF } })
+			.then(r => r.json())
+			.then(data => render((data && data.message) || [], list, input, hidden))
+			.catch(() => {});
+	}
+	function render(rows, list, input, hidden) {
+		if (!rows.length) { list.innerHTML = '<div class="combo-empty">No matches</div>'; list.style.display = "block"; return; }
+		list.innerHTML = rows.map(o => {
+			const label = o.code + (o.description ? " - " + o.description : "");
+			return `<div class="combo-item" data-code="${escHtml(o.code)}" title="${escHtml(label)}">${escHtml(label)}</div>`;
+		}).join("");
+		list.querySelectorAll(".combo-item").forEach(el => el.addEventListener("mousedown", e => {
+			e.preventDefault();
+			hidden.value = el.dataset.code;
+			input.value = el.textContent;
+			list.style.display = "none";
+		}));
+		list.style.display = "block";
+	}
+})();
+
+// items pagination (main row + remarks row per item)
+(function () {
+	const tbody = document.querySelector("#items-table tbody");
+	if (!tbody) return;
+	const trs = Array.from(tbody.querySelectorAll("tr"));
+	const pairs = [];
+	for (let i = 0; i + 1 < trs.length; i += 2) pairs.push([trs[i], trs[i + 1]]);
+	const total = pairs.length;
+	if (!total) return;
+	let pageSize = 25, page = 1;
+	const pages = () => Math.max(1, Math.ceil(total / pageSize));
+	function range(cur, tp) {
+		if (tp <= 7) return Array.from({ length: tp }, (_, i) => i + 1);
+		if (cur <= 4) return [1, 2, 3, 4, 5, "...", tp];
+		if (cur >= tp - 3) return [1, "...", tp - 4, tp - 3, tp - 2, tp - 1, tp];
+		return [1, "...", cur - 1, cur, cur + 1, "...", tp];
+	}
+	function render() {
+		const start = (page - 1) * pageSize, end = start + pageSize;
+		pairs.forEach((p, i) => { const v = (i >= start && i < end) ? "" : "none"; p[0].style.display = v; p[1].style.display = v; });
+		const tp = pages();
+		document.getElementById("items-pagination-row").style.display = tp > 1 ? "" : "none";
+		if (tp <= 1) return;
+		document.getElementById("items-page-info").textContent = `Showing ${start + 1}-${Math.min(end, total)} of ${total} items`;
+		const ctrl = document.getElementById("items-page-controls");
+		ctrl.innerHTML = "";
+		const btn = (label, target, disabled, active) => {
+			const el = document.createElement(label === "..." ? "span" : "button");
+			el.textContent = label;
+			if (label === "...") { el.className = "pg-ellipsis"; ctrl.appendChild(el); return; }
+			el.type = "button";
+			el.className = "pg-btn" + (active ? " active" : "");
+			el.disabled = disabled;
+			if (!disabled) el.onclick = () => { page = target; render(); };
+			ctrl.appendChild(el);
+		};
+		btn("<", page - 1, page === 1, false);
+		range(page, tp).forEach(p => btn(String(p), p, p === "...", p === page));
+		btn(">", page + 1, page === tp, false);
+	}
+	window.itemsSetPageSize = function (val) {
+		pageSize = val === "all" ? total : parseInt(val);
+		page = 1;
+		document.querySelectorAll("#items-size-group .pg-size-btn").forEach(b => b.classList.toggle("active", b.textContent.toLowerCase() === String(val)));
+		render();
+	};
+	render();
+})();
+
+function showItemDetail(btn) {
+	document.getElementById("item-detail-body").innerHTML = btn.closest(".desc-cell").querySelector(".desc-clamp").innerHTML;
+	document.getElementById("item-detail-modal").style.display = "flex";
+}
+function closeItemDetail() { document.getElementById("item-detail-modal").style.display = "none"; }
+
+// amounts and server-side totals (same builder as the submit)
+function offeredQtyFor(idx) {
+	const q = document.querySelector('.qty-input[data-idx="' + idx + '"]');
+	const qty = q ? parseFloat(q.value) : NaN;
+	if (!isNaN(qty) && qty > 0) return qty;
+	const r = document.querySelector('.rate-input[data-idx="' + idx + '"]');
+	return r ? (parseFloat(r.dataset.qty) || 0) : 0;
+}
+function recalculate(input) {
+	const idx = input.dataset.idx;
+	const rateEl = document.querySelector('.rate-input[data-idx="' + idx + '"]');
+	const rate = rateEl ? (parseFloat(rateEl.value) || 0) : 0;
+	document.getElementById("amount-" + idx).textContent = formatNum(offeredQtyFor(idx) * rate);
+	updateGrandTotal();
+}
+document.querySelectorAll(".rate-input, .qty-input").forEach(inp => {
+	inp.addEventListener("input", () => recalculate(inp));
+	inp.addEventListener("change", () => recalculate(inp));
+});
+
+let _taxTimer = null, _taxSeq = 0;
+function updateGrandTotal() {
+	if (!document.getElementById("tax-value")) return;
+	clearTimeout(_taxTimer);
+	_taxTimer = setTimeout(refreshTotals, 400);
+}
+function renderTotals(net, label, tax, grand) {
+	const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+	set("subtotal-amount", formatNum(net));
+	set("tax-row-label", label);
+	set("tax-amount", formatNum(tax));
+	set("grand-total", formatNum(grand));
+	set("submit-total", CURRENCY + " " + formatNum(grand));
+}
+function refreshTotals() {
+	const included = document.getElementById("tax-value").value === "Included";
+	const items = collectItems();
+	if (!items.some(i => i.rate > 0)) { renderTotals(0, "Tax", 0, 0); return; }
+	const seq = ++_taxSeq;
+	document.getElementById("tax-row-label").textContent = "Tax - calculating...";
+	const netOf = () => items.reduce((s, i) => s + i.rate * (i.offered_qty > 0 ? i.offered_qty : offeredQtyFor(i.idx)), 0);
+	postJson("preview_quote_taxes", { token: TOKEN, items: JSON.stringify(items), tax_included: included ? "Included" : "Excluded" })
+		.then(data => {
+			if (seq !== _taxSeq) return;
+			const m = data.message;
+			if (!m || m.error) { renderTotals(netOf(), "Tax - could not calculate", 0, netOf()); return; }
+			const parts = (m.taxes || []).map(t => t.label).filter(Boolean);
+			let label = (parts.length ? parts.join(" + ") : "Tax") + (included ? " (included in rates)" : " (added on top)");
+			if ((m.untaxed_lines || []).length) label += " - no tax on item(s) " + m.untaxed_lines.join(", ");
+			renderTotals(m.net_total || 0, label, m.total_taxes || 0, m.grand_total || 0);
+		})
+		.catch(() => { if (seq === _taxSeq) renderTotals(netOf(), "Tax - could not calculate", 0, netOf()); });
+}
+
+function setToggle(field, value, btn) {
+	btn.closest(".toggle-group").querySelectorAll(".toggle-btn").forEach(b => b.classList.remove("active"));
+	btn.classList.add("active");
+	document.getElementById(field + "-value").value = value;
+	if (field === "tax") updateGrandTotal();
+}
+
+function addPTRow() {
+	const tr = document.createElement("tr");
+	tr.innerHTML = `<td><input type="text" class="dyn-input pt-term" placeholder="e.g. On delivery"></td>
+		<td><input type="number" class="dyn-input dyn-pct pt-pct" placeholder="0" min="0" max="100" step="0.01"></td>
+		<td><button type="button" class="btn-remove-row" onclick="removeRow(this,'pt-body')">&times;</button></td>`;
+	document.getElementById("pt-body").appendChild(tr);
+}
+function addTSRow() {
+	const tr = document.createElement("tr");
+	tr.innerHTML = `<td><input type="text" class="dyn-input ts-param" placeholder="Parameter"></td>
+		<td><input type="text" class="dyn-input ts-val" placeholder="Value"></td>
+		<td><button type="button" class="btn-remove-row" onclick="removeRow(this,'ts-body')">&times;</button></td>`;
+	document.getElementById("ts-body").appendChild(tr);
+}
+function removeRow(btn, bodyId) {
+	if (document.getElementById(bodyId).rows.length > 1) btn.closest("tr").remove();
+}
+
+// Excel round trip
+function downloadRfqExcel() {
+	window.location.href = API + "download_rfq_excel?token=" + encodeURIComponent(TOKEN);
+}
+function uploadRfqExcel(input) {
+	const file = input.files && input.files[0];
+	if (!file) return;
+	const status = document.getElementById("xlsx-status");
+	status.style.color = "#666";
+	status.textContent = "Reading " + file.name + "...";
+	const fd = new FormData();
+	fd.append("file", file);
+	fd.append("token", TOKEN);
+	fetch(API + "upload_rfq_excel", { method: "POST", headers: { "X-Frappe-CSRF-Token": CSRF }, body: fd })
+		.then(r => r.json())
+		.then(data => {
+			const msg = data && data.message;
+			if (!msg || !msg.items) { status.textContent = ""; alert(serverErrorText(data)); return; }
+			fillFromExcel(msg.items);
+			status.style.color = "#1e7e34";
+			status.textContent = msg.items.length + " row(s) loaded - please review and submit.";
+		})
+		.catch(() => { status.textContent = ""; alert("Upload failed. Please try again."); })
+		.finally(() => { input.value = ""; });
+}
+function fillFromExcel(items) {
+	const q = (cls, idx) => document.querySelector("." + cls + '[data-idx="' + idx + '"]');
+	items.forEach(it => {
+		const rate = q("rate-input", it.idx);
+		if (rate) { rate.value = it.rate || 0; recalculate(rate); }
+		if (it.offered_qty > 0) { const qty = q("qty-input", it.idx); if (qty) { qty.value = it.offered_qty; recalculate(qty); } }
+		if (HSN_ENABLED) {
+			const hv = q("hsn-value", it.idx), hi = q("hsn-input", it.idx);
+			if (hv) hv.value = it.hsn || "";
+			if (hi) hi.value = it.hsn_label || it.hsn || "";
+		}
+		const tax = q("tax-select", it.idx);
+		if (tax && it.item_tax_template) tax.value = it.item_tax_template;
+		const rem = q("remarks-input", it.idx); if (rem) rem.value = it.remarks || "";
+		const moq = q("moq-input", it.idx); if (moq && it.moq) moq.value = it.moq;
+		const spq = q("spq-input", it.idx); if (spq && it.spq) spq.value = it.spq;
+	});
+	updateGrandTotal();
+}
+
+// optional quotation document (uses Frappe's standard upload endpoint)
+function uploadAttachment() {
+	const input = document.getElementById("quotation-file");
+	const file = input && input.files && input.files[0];
+	if (!file) return Promise.resolve(null);
+	const status = document.getElementById("attach-status");
+	status.textContent = "Uploading...";
+	const fd = new FormData();
+	fd.append("file", file, file.name);
+	fd.append("is_private", "1");
+	return fetch("/api/method/upload_file", { method: "POST", headers: { "X-Frappe-CSRF-Token": CSRF }, body: fd })
+		.then(r => r.json())
+		.then(data => {
+			if (data.message && data.message.file_url) { status.textContent = "Attached"; return data.message.file_url; }
+			status.textContent = "Attachment could not be uploaded - you can e-mail it to the buyer.";
+			return null;
+		})
+		.catch(() => { status.textContent = "Attachment could not be uploaded."; return null; });
+}
+
+function submitQuotation() {
+	const items = collectItems();
+	if (!items.some(i => i.rate > 0)) { alert("Please enter at least one rate before submitting."); return; }
+	const badQty = items.find(i => i.rate > 0 && !(i.offered_qty > 0));
+	if (badQty) { alert("Item #" + badQty.idx + ": Offered Qty must be greater than 0."); return; }
+	const missing = items.find(i => i.rate > 0 && ((HSN_ENABLED && !i.hsn) || (TAX_REQUIRED && !i.item_tax_template)));
+	if (missing) {
+		alert("Item #" + missing.idx + ": " + (HSN_ENABLED && !missing.hsn ? "HSN/SAC" : "Tax") + " is required - please select one.");
+		return;
+	}
+	const val = id => { const el = document.getElementById(id); return el ? el.value.trim() : ""; };
+	const payment_terms = [];
+	document.querySelectorAll("#pt-body tr").forEach(r => {
+		const term = (r.querySelector(".pt-term")?.value || "").trim();
+		if (term) payment_terms.push({ term, percentage: parseFloat(r.querySelector(".pt-pct")?.value) || 0 });
+	});
+	const technical_spec = [];
+	document.querySelectorAll("#ts-body tr").forEach(r => {
+		const parameter = (r.querySelector(".ts-param")?.value || "").trim();
+		if (parameter) technical_spec.push({ parameter, value: (r.querySelector(".ts-val")?.value || "").trim() });
+	});
+	const taxIncluded = val("tax-value");
+	confirmModal(taxIncluded, function () {
+		const btn = document.getElementById("submit-btn"), spinner = document.getElementById("spinner");
+		btn.disabled = true;
+		spinner.style.display = "inline-block";
+		uploadAttachment().then(fileUrl => postJson("submit_portal_quotation", {
+			token: TOKEN,
+			items: JSON.stringify(items),
+			notes: val("notes"),
+			lead_time_days: val("lead-time-days"),
+			valid_till: val("valid-till"),
+			quotation_number: val("quotation-number"),
+			freight_insurance: val("freight-value"), freight_insurance_desc: val("freight-desc"),
+			packing_forwarding: val("packing-value"), packing_forwarding_desc: val("packing-desc"),
+			installation: val("installation-value"), installation_desc: val("installation-desc"),
+			tax_included: taxIncluded,
+			payment_terms: JSON.stringify(payment_terms),
+			technical_spec: JSON.stringify(technical_spec),
+			quotation_attachment: fileUrl || "",
+		})).then(data => {
+			if (data.message && data.message.sq_name) {
+				const m = data.message;
+				document.getElementById("success-title").textContent = m.revision === 0 ? "Quotation submitted" : "Version " + m.revision + " submitted";
+				document.getElementById("sq-ref").textContent = "Reference: " + m.sq_name;
+				document.getElementById("success-overlay").style.display = "flex";
+			} else {
+				alert("Could not submit:\n\n" + serverErrorText(data));
+				btn.disabled = false;
+				spinner.style.display = "none";
+			}
+		}).catch(() => {
+			alert("Network error. Please try again.");
+			btn.disabled = false;
+			spinner.style.display = "none";
+		});
+	});
+}
+
+function confirmModal(taxValue, onConfirm) {
+	const overlay = document.getElementById("tax-confirm-overlay");
+	document.getElementById("tax-confirm-msg").innerHTML = (taxValue === "Included")
+		? 'Your rates are marked as <strong style="color:#1e7e34;">including tax</strong>. Submit the quotation?'
+		: 'Tax will be <strong style="color:#c62828;">added on top</strong> of your rates. Submit the quotation?';
+	overlay.style.display = "flex";
+	const ok = document.getElementById("tax-confirm-ok"), cancel = document.getElementById("tax-confirm-cancel");
+	const close = () => { overlay.style.display = "none"; ok.onclick = null; cancel.onclick = null; };
+	ok.onclick = () => { close(); onConfirm(); };
+	cancel.onclick = close;
+}
+
+// view an earlier submission with a one-time code
+let _sqViewName = null;
+function showOtpError(msg) { const el = document.getElementById("otp-error"); el.textContent = msg; el.style.display = "block"; }
+function closeOtpModal() { document.getElementById("otp-modal").style.display = "none"; }
+function closeSqPreview() { document.getElementById("sq-preview-modal").style.display = "none"; }
+function requestOtp(first) {
+	document.getElementById("otp-input").value = "";
+	document.getElementById("otp-error").style.display = "none";
+	document.getElementById("otp-desc").textContent = "Sending code...";
+	postJson("send_sq_view_otp", { token: TOKEN, sq_name: _sqViewName })
+		.then(data => {
+			if (data.message && data.message.success) {
+				document.getElementById("otp-desc").textContent = (first ? "A code has been sent to " : "A new code has been sent to ")
+					+ data.message.masked_email + ". It is valid for " + data.message.minutes + " minutes.";
+			} else { document.getElementById("otp-desc").textContent = ""; showOtpError(serverErrorText(data)); }
+		})
+		.catch(() => showOtpError("Network error. Please try again."));
+}
+function initSqView(name) { _sqViewName = name; document.getElementById("otp-modal").style.display = "flex"; requestOtp(true); }
+function resendOtp() { if (_sqViewName) requestOtp(false); }
+function verifySqOtp() {
+	const otp = document.getElementById("otp-input").value.trim();
+	if (otp.length !== 6) { showOtpError("Please enter the 6-digit code."); return; }
+	postJson("verify_otp_and_get_sq", { token: TOKEN, sq_name: _sqViewName, otp })
+		.then(data => {
+			if (data.message && data.message.name) { closeOtpModal(); renderSqPreview(data.message); }
+			else showOtpError(serverErrorText(data));
+		})
+		.catch(() => showOtpError("Network error. Please try again."));
+}
+function renderSqPreview(sq) {
+	document.getElementById("preview-title").textContent = sq.name;
+	document.getElementById("preview-subtitle").textContent = ["Version " + (sq.revision || 0), sq.transaction_date, sq.revised ? "Superseded" : ""].filter(Boolean).join("  |  ");
+	const th = s => `<th style="padding:7px 10px;text-align:left;border-bottom:2px solid #e8ecf0;">${s}</th>`;
+	const td = (s, r) => `<td style="padding:7px 10px;${r ? "text-align:right;" : ""}">${s}</td>`;
+	let html = `<table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;"><thead><tr>${th("#")}${th("Description")}${th("Qty")}${th("UOM")}${th("Rate")}${th("Amount")}</tr></thead><tbody>`;
+	(sq.items || []).forEach(i => {
+		const extra = [i.moq ? "MOQ " + i.moq : "", i.spq ? "SPQ " + i.spq : "", i.remarks || ""].filter(Boolean).join(" | ");
+		html += `<tr style="border-bottom:1px solid #f0f0f0;">${td(i.idx)}${td("<strong>" + escHtml(i.item_name) + "</strong>" + (extra ? `<div style="font-size:11px;color:#888;">${escHtml(extra)}</div>` : ""))}${td(i.qty, 1)}${td(escHtml(i.uom))}${td(formatNum(i.rate), 1)}${td(formatNum(i.amount), 1)}</tr>`;
+	});
+	html += `<tr>${td("", 0)}${td("<strong>Net total</strong>")}<td colspan="3"></td>${td(formatNum(sq.net_total), 1)}</tr>`;
+	html += `<tr>${td("", 0)}${td("Tax")}<td colspan="3"></td>${td(formatNum(sq.total_taxes), 1)}</tr>`;
+	html += `<tr>${td("", 0)}${td("<strong>Grand total (" + escHtml(sq.currency) + ")</strong>")}<td colspan="3"></td>${td("<strong>" + formatNum(sq.grand_total) + "</strong>", 1)}</tr></tbody></table>`;
+	if ((sq.payment_terms || []).length) {
+		html += `<h4 style="margin:4px 0 8px;color:#1a73e8;">Payment terms</h4><ul>` + sq.payment_terms.map(p => `<li>${escHtml(p.term)}: ${p.percentage}%</li>`).join("") + "</ul>";
+	}
+	if ((sq.technical_spec || []).length) {
+		html += `<h4 style="margin:12px 0 8px;color:#1a73e8;">Technical specification</h4><ul>` + sq.technical_spec.map(t => `<li>${escHtml(t.parameter)}: ${escHtml(t.value)}</li>`).join("") + "</ul>";
+	}
+	const meta = [sq.lead_time_days ? "Lead time: " + sq.lead_time_days + " days" : "", sq.valid_till ? "Valid until: " + sq.valid_till : ""].filter(Boolean);
+	if (meta.length) html += `<p style="margin-top:12px;font-size:13px;">${escHtml(meta.join("  |  "))}</p>`;
+	if (sq.terms) html += `<div style="background:#f8f9fc;border-radius:6px;padding:12px 16px;white-space:pre-wrap;font-size:13px;">${escHtml(sq.terms)}</div>`;
+	document.getElementById("sq-preview-body").innerHTML = html;
+	document.getElementById("sq-preview-modal").style.display = "flex";
+}
+document.getElementById("item-detail-modal").addEventListener("click", function (e) { if (e.target === this) closeItemDetail(); });
+</script>
+{% endif %}
+</body>
+</html>

@@ -1,0 +1,39 @@
+{% extends "templates/web.html" %}
+{% block title %}{{ _("Supplier Portal") }}{% endblock %}
+{% block page_content %}
+{% include "templates/includes/supplier_portal_styles.html" %}
+<div class="sp-shell">
+	{% include "templates/includes/supplier_portal_nav.html" %}
+	<main class="sp-main">
+		{% if not_linked %}{% include "templates/includes/supplier_portal_not_linked.html" %}{% else %}
+		<div class="sp-head"><h2>{{ _("Welcome, {0}").format(portal_fullname) }}</h2></div>
+		<div class="sp-kpis">
+			{% for k in kpis %}
+			<a class="sp-kpi" href="{{ k.route }}"><div class="n">{{ k.value }}</div><div class="l">{{ _(k.label) }}</div></a>
+			{% endfor %}
+		</div>
+		<div class="sp-card">
+			<h4>{{ _("Recent Purchase Orders") }}</h4>
+			<div class="sp-table-wrap">
+			<table class="sp-table">
+				<thead><tr><th>{{ _("Purchase Order") }}</th><th>{{ _("Date") }}</th><th>{{ _("Status") }}</th><th>{{ _("Acknowledgement") }}</th><th class="num">{{ _("Total") }}</th></tr></thead>
+				<tbody>
+				{% for po in recent_pos %}
+				<tr>
+					<td><a href="/supplier_portal/purchase_orders?name={{ po.name | urlencode }}">{{ po.name }}</a></td>
+					<td>{{ po.date_fmt }}</td>
+					<td>{{ _(po.status) }}</td>
+					<td><span class="sp-pill {{ 'orange' if po.ub_portal_status == 'Pending Acceptance' else 'blue' }}">{{ _(po.ub_portal_status or "-") }}</span></td>
+					<td class="num">{{ po.total_fmt }}</td>
+				</tr>
+				{% else %}
+				<tr><td colspan="5" class="sp-muted">{{ _("No purchase orders yet.") }}</td></tr>
+				{% endfor %}
+				</tbody>
+			</table>
+			</div>
+		</div>
+		{% endif %}
+	</main>
+</div>
+{% endblock %}
