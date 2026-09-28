@@ -2,7 +2,7 @@
 
 Usage from another script:
 
-	import sys; sys.path.insert(0, "/home/finstein-emp/frappe-v16/apps/universal_buying/tools")
+	import os, sys; sys.path.insert(0, "<app>/tools")
 	from make_doctype import make_doctype, F
 
 	make_doctype(
@@ -29,7 +29,7 @@ import json
 import os
 import re
 
-APP_PKG = "/home/finstein-emp/frappe-v16/apps/universal_buying/universal_buying"
+APP_PKG = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "universal_buying")
 NOW = "2026-09-26 12:00:00.000000"
 
 

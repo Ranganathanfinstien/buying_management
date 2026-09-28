@@ -12,7 +12,7 @@ You will enter your own small dataset and walk it from **Sales Order to Payment*
 
 ### 0.1 Who does which step
 
-Some steps must be done by a **different user** from the one who created the document (you cannot approve your own RFQ). The site already has demo users, all with password **Demo@12345**:
+Some steps must be done by a **different user** from the one who created the document (you cannot approve your own RFQ). The demo site has users for each role (ask your administrator for their password):
 
 | User (…@buying.local) | Use for |
 |---|---|

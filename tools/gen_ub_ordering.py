@@ -1,8 +1,9 @@
 """Generate the UB Ordering doctypes (BRD v2 sections 6.17 - 6.21, 8.3, 8.4)."""
 
+import os
 import sys
 
-sys.path.insert(0, "/home/finstein-emp/frappe-v16/apps/universal_buying/tools")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from make_doctype import F, make_doctype, perm
 
 M = "UB Ordering"

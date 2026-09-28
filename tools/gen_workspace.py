@@ -4,7 +4,7 @@ import glob
 import json
 import os
 
-PKG = "/home/finstein-emp/frappe-v16/apps/universal_buying/universal_buying"
+PKG = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "universal_buying")
 NOW = "2026-09-26 12:00:00.000000"
 
 SECTIONS = [

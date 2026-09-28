@@ -1,12 +1,13 @@
 """Generate the UB Supplier module doctypes (BRD v2 sections 6.2 - 6.7).
 
-Run: /home/finstein-emp/frappe-v16/env/bin/python tools/gen_ub_supplier.py
+Run from the app folder: <bench>/env/bin/python tools/gen_ub_supplier.py
 Only the .json files are rewritten; hand-written .py / .js controllers are kept.
 """
 
+import os
 import sys
 
-sys.path.insert(0, "/home/finstein-emp/frappe-v16/apps/universal_buying/tools")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from make_doctype import F, make_doctype, perm
 
 M = "UB Supplier"

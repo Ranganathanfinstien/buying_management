@@ -3,7 +3,7 @@
 import json
 import os
 
-BASE = "/home/finstein-emp/frappe-v16/apps/universal_buying/universal_buying/ub_planning/report"
+BASE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "universal_buying", "ub_planning", "report")
 NOW = "2026-09-26 12:00:00.000000"
 ROLES = ["System Manager", "Purchase Manager", "Purchase User", "Sourcing User", "Sourcing Manager"]
 REPORTS = [

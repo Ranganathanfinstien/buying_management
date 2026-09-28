@@ -1,6 +1,7 @@
 """Quotation Message: one discussion thread per RFQ supplier row (buyer <-> supplier, plus internal notes)."""
+import os
 import sys
-sys.path.insert(0, "/home/finstein-emp/frappe-v16/apps/universal_buying/tools")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from make_doctype import F, make_doctype, perm
 
 make_doctype("UB Sourcing", "Quotation Message", [

@@ -6,10 +6,10 @@ Read this whole file before writing code. "BRD" section numbers below refer to t
 
 | Item | Value |
 |---|---|
-| Bench | `/home/finstein-emp/frappe-v16` (Frappe 16.30, ERPNext 16.31, Python 3.14) |
-| App | `/home/finstein-emp/frappe-v16/apps/universal_buying` (package `universal_buying`) |
+| Bench | `<bench>` (Frappe 16.30, ERPNext 16.31, Python 3.14) |
+| App | `<bench>/apps/universal_buying` (package `universal_buying`) |
 | Site | `buying.local`, company **Universal Buying Demo** (abbr `UBD`), currency INR, country India |
-| ERPNext v16 source (check signatures here) | `/home/finstein-emp/frappe-v16/apps/erpnext`, `/home/finstein-emp/frappe-v16/apps/frappe` |
+| ERPNext v16 source (check signatures here) | `<bench>/apps/erpnext`, `<bench>/apps/frappe` |
 
 **india_compliance is NOT installed.** Never depend on it. GST fields (`gst_hsn_code`, `GST HSN Code` doctype, `gstin` on Address…) may be missing. Guard with `frappe.get_meta(dt).has_field(...)` / `frappe.db.exists("DocType", ...)`.
 
@@ -24,8 +24,8 @@ Read this whole file before writing code. "BRD" section numbers below refer to t
 ## 3. Conventions
 
 - Tabs for Python/JS indentation (Frappe style), double quotes. JSON 1-space indent is fine (generator output).
-- Create doctypes with the generator: `/home/finstein-emp/frappe-v16/apps/universal_buying/tools/make_doctype.py` (read its docstring). Write a small `tools/gen_<module>.py` script that calls it, run it with `/home/finstein-emp/frappe-v16/env/bin/python tools/gen_<module>.py`. The generator never overwrites existing `.py`/`.js`, so regenerate JSON freely.
-- Doctype names must not clash with ERPNext/Frappe doctypes. Check `find /home/finstein-emp/frappe-v16/apps/erpnext /home/finstein-emp/frappe-v16/apps/frappe -path '*doctype/<scrubbed_name>'` before creating.
+- Create doctypes with the generator: `<bench>/apps/universal_buying/tools/make_doctype.py` (read its docstring). Write a small `tools/gen_<module>.py` script that calls it, run it with `<bench>/env/bin/python tools/gen_<module>.py`. The generator never overwrites existing `.py`/`.js`, so regenerate JSON freely.
+- Doctype names must not clash with ERPNext/Frappe doctypes. Check `find <bench>/apps/erpnext <bench>/apps/frappe -path '*doctype/<scrubbed_name>'` before creating.
 - **Every custom field on a standard doctype starts with `ub_`.** Declare them in your module's `install.py` → `CUSTOM_FIELDS = {"Purchase Order": [ {fieldname, label, fieldtype, insert_after, ...}, ... ]}`. Also `ROLES = [...]`, `PROPERTY_SETTERS = [...]` and an idempotent `def setup():` (workflows, master records). The core installer (`setup/install.py`) merges all modules. Read it.
 - Hooks: write `<module>/hooks_contrib.py` as PURE DATA (no imports). Allowed keys are listed at the top of `universal_buying/hooks.py`. Keys like OVERRIDE_DOCTYPE_CLASS / DOCTYPE_JS are single-owner – only the owner in section 5 may set them for that doctype. Everybody may add DOC_EVENTS for any doctype.
 - Every rule number, role list, threshold, day count: read from settings, never hard-code:
