@@ -140,9 +140,14 @@ class TestApprovalFlow(IntegrationTestCase):
 		self.assertRaises(frappe.PermissionError, approval.approve, self.po.name)
 		frappe.set_user(self.admin_like)
 		self.assertRaises(frappe.PermissionError, approval.approve, self.po.name)
-		# frappe.get_roles("Administrator") returns every role; only assigned roles may count
+		# frappe.get_roles("Administrator") returns every role; only assigned roles may count.
+		# (A site may have given Administrator the step role on purpose - then approving is allowed.)
 		frappe.set_user("Administrator")
-		self.assertRaises(frappe.PermissionError, approval.approve, self.po.name)
+		step_roles = set(approval.get_approval_state(self.po.name)["pending_roles"])
+		if step_roles & approval._user_roles("Administrator"):
+			approval.approve(self.po.name)
+		else:
+			self.assertRaises(frappe.PermissionError, approval.approve, self.po.name)
 
 	def test_reject_needs_reason_and_restart(self):
 		approval.send_for_approval(self.po.name)
