@@ -137,7 +137,7 @@ make_doctype(
 		F("lead_time_order", "Check", "Lead-time Mode", default="0",
 			description="Order date = required date minus the shortest Supplier Line Card lead time for the item's MPN."),
 		F("col_1", "Column Break"),
-		ro("status", "Select", "Status", options="Not Started\nQueued\nIn Progress\nCompleted\nFailed", default="Not Started",
+		ro("status", "Select", "Status", options="Not Started\nQueued\nIn Progress\nCompleted\nCompleted with Errors\nFailed", default="Not Started",
 			allow_on_submit=1, in_list_view=1, in_standard_filter=1, no_copy=1),
 		ro("started_at", "Datetime", "Started At", allow_on_submit=1, no_copy=1),
 		ro("completed_at", "Datetime", "Completed At", allow_on_submit=1, no_copy=1),

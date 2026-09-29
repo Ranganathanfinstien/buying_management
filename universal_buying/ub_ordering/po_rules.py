@@ -127,6 +127,24 @@ def _load_taxes(po, template):
 		po.append("taxes", tax)
 
 
+def select_tax_template_for_addresses(po):
+	"""For POs the system builds itself (Auto PO, exceptions, jobs): load the In State / Out State template
+	that matches the supplier and company addresses, replacing a default template that does not match.
+	Returns True when taxes were (re)loaded. Manual POs keep the V-17.1 check in apply_tax_rules."""
+	if is_import(po) or po.get("is_internal_supplier"):
+		return False
+	templates = scoped_templates(po.company)
+	scope = expected_scope(po) if templates else None
+	wanted = templates.get(scope) if scope else None
+	if not wanted or po.get("taxes_and_charges") == wanted:
+		return False
+	current_scope = template_scope(po.get("taxes_and_charges"))
+	if po.get("taxes_and_charges") and not current_scope:
+		return False  # a non In/Out template chosen by a Tax Rule / party default: leave it
+	_load_taxes(po, wanted)
+	return True
+
+
 def apply_tax_rules(po):
 	"""Set the import flag, clear GST templates on imports, pick / validate In State vs Out State.
 

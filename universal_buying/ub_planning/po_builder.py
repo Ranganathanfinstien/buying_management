@@ -83,9 +83,11 @@ def build_purchase_order(company, supplier, lines, origin_doctype, origin_name=N
 		row.discount_amount = 0
 		row.margin_rate_or_amount = 0
 
+	_select_address_template(po)
 	if not po.get("taxes"):
 		# no Tax Rule / party template matched: fall back to the company default template
 		po.set_taxes()
+		_select_address_template(po)
 
 	set_import_flag(po)
 	po.calculate_taxes_and_totals()
@@ -93,6 +95,15 @@ def build_purchase_order(company, supplier, lines, origin_doctype, origin_name=N
 		po.flags.ignore_permissions = True
 		po.insert()
 	return po
+
+
+def _select_address_template(po):
+	"""In State vs Out State by address, so a system-built PO never fails the PO tax check."""
+	try:
+		from universal_buying.ub_ordering.po_rules import select_tax_template_for_addresses
+	except ImportError:
+		return False
+	return select_tax_template_for_addresses(po)
 
 
 def set_import_flag(po):

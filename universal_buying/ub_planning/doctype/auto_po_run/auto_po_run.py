@@ -10,6 +10,8 @@ that cannot be ordered land on one Auto PO Exception per run.
 
 from collections import OrderedDict
 
+import sys
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -84,7 +86,7 @@ def run_auto_po(name):
 	try:
 		result = execute_run(doc)
 		doc.db_set({
-			"status": "Completed",
+			"status": "Completed with Errors" if result["errors"] else "Completed",
 			"completed_at": now_datetime(),
 			"po_count": len(result["purchase_orders"]),
 			"purchase_orders": "\n".join(result["purchase_orders"]),
@@ -154,7 +156,11 @@ def create_purchase_orders(doc, to_order, project, errors):
 		except Exception:
 			# one bad supplier must not lose the other POs; the error is kept on the run
 			frappe.db.rollback(save_point="ub_auto_po")
-			errors.append(_("Supplier {0}: {1}").format(supplier, frappe.get_traceback()))
+			log = frappe.log_error(title=_("Auto PO Run {0}: PO for {1} failed").format(doc.name, supplier),
+				reference_doctype="Auto PO Run", reference_name=doc.name)
+			reason = frappe.utils.strip_html(str(frappe.local.message_log[-1].get("message")
+				if getattr(frappe.local, "message_log", None) else "") or "") or frappe.utils.strip_html(str(sys.exc_info()[1]))
+			errors.append(_("Supplier {0}: {1} (details: Error Log {2})").format(supplier, reason, log.name))
 			frappe.clear_last_message()
 			continue
 		created.append(po.name)

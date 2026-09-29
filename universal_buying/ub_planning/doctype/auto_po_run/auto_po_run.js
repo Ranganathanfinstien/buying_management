@@ -11,12 +11,19 @@ frappe.ui.form.on("Auto PO Run", {
 		}
 	},
 	refresh(frm) {
-		const colors = { "Not Started": "gray", Queued: "blue", "In Progress": "orange", Completed: "green", Failed: "red" };
+		const colors = { "Not Started": "gray", Queued: "blue", "In Progress": "orange", Completed: "green", "Completed with Errors": "orange", Failed: "red" };
 		if (frm.doc.docstatus === 1 && frm.doc.status) {
 			frm.page.set_indicator(__(frm.doc.status), colors[frm.doc.status] || "gray");
 		}
 		if (frm.doc.docstatus === 1 && ["Queued", "In Progress"].includes(frm.doc.status)) {
 			frm.dashboard.set_headline_alert(__("Auto PO run in progress. This form updates when it finishes."), "blue");
+		}
+		if (frm.doc.docstatus === 1 && frm.doc.status === "Completed with Errors" && frm.doc.error_message) {
+			frm.dashboard.set_headline_alert(
+				__("Some Purchase Orders could not be created:") + "<br>" +
+					frappe.utils.escape_html(frm.doc.error_message).replace(/\n+/g, "<br>"),
+				"orange"
+			);
 		}
 		if (frm.doc.purchase_orders) {
 			frm.add_custom_button(__("Purchase Orders"), () => {
