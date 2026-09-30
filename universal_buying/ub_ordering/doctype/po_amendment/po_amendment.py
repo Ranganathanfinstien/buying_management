@@ -170,6 +170,10 @@ class POAmendment(Document):
 		po = frappe.get_doc("Purchase Order", self.purchase_order)
 		update_child_qty_rate("Purchase Order", json.dumps(self.build_trans_items(po), default=str), po.name)
 		po.reload()
+		# update_child_qty_rate moves the line dates only; keep the header Required By on the earliest line
+		dates = [getdate(d.schedule_date) for d in po.items if d.schedule_date]
+		if dates and getdate(po.schedule_date) != min(dates):
+			po.db_set("schedule_date", min(dates))
 		self.db_set({"applied": 1, "applied_on": now_datetime(), "revised_grand_total": flt(po.grand_total)})
 		po.add_comment("Info", _("PO Amendment {0} applied. Grand total {1} -> {2} (taxes recalculated). Reason: {3}").format(
 			self.name, flt(self.original_grand_total), flt(po.grand_total), self.reason))

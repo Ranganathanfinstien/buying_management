@@ -110,6 +110,20 @@ class UBSupplierQuotation(SupplierQuotation):
 		if self.rounded_total is None:
 			self.rounded_total = 0
 
+	def before_submit(self):
+		"""V-15.1: a quotation of an RFQ is approved only through the award (Quotation Comparison)."""
+		if hasattr(super(), "before_submit"):
+			super().before_submit()
+		if self.get("workflow_state") != "Approved":
+			return
+		rfq = next((d.request_for_quotation for d in self.items if d.get("request_for_quotation")), None)
+		if rfq and frappe.db.get_value("Request for Quotation", rfq, "ub_awarded_quotation") != self.name:
+			frappe.throw(
+				_("Supplier Quotation {0} belongs to RFQ {1}. Approve it by awarding it from the Quotation "
+				  "Comparison.").format(self.name, rfq),
+				title=_("Award required"),
+			)
+
 	def after_insert(self):
 		"""BR-09: a new quotation (portal or desk) supersedes the party's earlier live ones on the RFQ."""
 		rfq = next((d.request_for_quotation for d in self.items if d.get("request_for_quotation")), None)

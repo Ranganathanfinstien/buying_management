@@ -75,3 +75,13 @@ class TestPOAmendment(IntegrationTestCase):
 			self.assertGreater(flt(po.grand_total), flt(po.net_total))
 		self.assertEqual(flt(frappe.db.get_value("PO Amendment", doc.name, "revised_grand_total")), flt(po.grand_total))
 		self.assertEqual(frappe.db.get_value("PO Amendment", doc.name, "applied"), 1)
+
+	def test_date_change_moves_header_required_by(self):
+		po = frappe.get_doc("Purchase Order", self.po.name)
+		new_date = frappe.utils.add_days(po.items[0].schedule_date, 7)
+		doc = self.amendment(revised_schedule_date=new_date)
+		with self.cap():
+			doc.insert(ignore_permissions=True)
+			doc.apply_to_po()
+		self.assertEqual(frappe.utils.getdate(frappe.db.get_value("Purchase Order", po.name, "schedule_date")),
+			frappe.utils.getdate(new_date))

@@ -342,6 +342,21 @@ def _reject_quotations(rfq_name, exclude=None):
 		doc.flags.ignore_mandatory = True
 		apply_workflow(doc, ACTION_REJECT)
 		done.append(name)
+	# quotations approved outside the award (before that was blocked) lose to the winner as well
+	approved = frappe.db.sql(
+		"""
+		SELECT DISTINCT sq.name FROM `tabSupplier Quotation` sq
+		JOIN `tabSupplier Quotation Item` sqi ON sqi.parent = sq.name
+		WHERE sqi.request_for_quotation = %s AND sq.docstatus = 1 AND sq.workflow_state = %s AND sq.name != %s
+		""",
+		(rfq_name, STATE_APPROVED, exclude or ""),
+		pluck=True,
+	)
+	for name in approved:
+		doc = frappe.get_doc(SQ, name)
+		doc.db_set({"workflow_state": STATE_REJECTED, "ub_sq_status": STATE_REJECTED})
+		doc.add_comment("Workflow", STATE_REJECTED)
+		done.append(name)
 	return done
 
 
